@@ -1,0 +1,146 @@
+body{
+    background-color: #23242D !important;
+}
+
+.nav_bar{
+    background-color: #2D2E34;
+}
+
+.nav_bar a{
+    font-size: 25px;
+    font-weight: bolder;
+}
+.form-floating input{
+    background-color: #505050;
+    margin-top: 10px;
+    height: 20px !important;
+}
+.icons i{
+    color: white;
+    font-size: 25px;
+    margin-right: 30px;
+    margin-top: 10px;
+}
+
+
+
+.fixedbanner img{
+     width: 100%;
+}
+
+.smartwatches{
+    border-radius: 50%;
+    width: 200px;
+    height: 150px;
+    background-color: red;
+}
+
+.smartwatches img{
+    border-radius: 50%;
+    width: 200px;
+    height: 150px;  
+}
+
+.cat_section{
+    display: flex !important;
+    justify-content: space-between;
+}
+.admin-section{
+    display: flex;
+    height: 100% !important;
+    width: 100% !important;
+  
+  }
+  .sidebar{
+    background-color:#A4A4A4;
+    height: 100% !important;
+    width: 220px;
+    color: black;
+    font-weight:bold;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    font-size: 25px;
+    font-family:Arial, Helvetica, sans-serif;
+  }
+  
+  .sidebar a{
+    text-decoration: none;
+    color:black
+  }
+
+  .product-add{
+    gap: 10px !important;
+    border: 2px solid #51624F;
+    background-color: #A4A4A4;
+    margin-top: 20px;
+    padding: 20px;
+  }
+
+  .product-add input,select{
+      background-color: #D9D9D9;
+      border: 0px;
+      
+  }
+  
+  .dropdown{
+    height: 50px;
+  }
+  .namefield{
+    height: 50px;
+  }
+  .add-prdct-btn{
+    height:40px !important;
+  }
+
+  .add-btn{
+    width:130px;
+    height: 58px;
+    font-weight: 600;
+  }
+  .product-btn{
+    display: flex;
+    justify-content: space-between;
+    width: 100% !important;
+  }
+  
+  td img{
+    height:60px;
+    width: 70px;
+  }
+
+  /* add category */
+
+  .category{
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 90%;
+    overflow-y: hidden;
+  }
+
+  .category-form{
+    display: flex;
+    flex-direction: column;
+    
+    background-color:#A4A4A4 !important;
+    border-radius: 9px;
+    height: 150px;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 500px;
+    color: white;
+    padding: 5px;
+  }
+  .category-form input{
+    width: 280px;
+    height: 60px;
+    padding: 8px;
+    border: 0px;
+  
+  
+  
+  }
+  .tablerow{
+    background-color: #A4A4A4;
+  }

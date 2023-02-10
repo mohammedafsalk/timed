@@ -1,0 +1,67 @@
+<div class="nav-section">
+        <div class="container-fluid nav_bar">
+            <div class="row">
+              <div class="col-md-4">
+                <nav class="navbar navbar-expand-lg">
+                  <a class="navbar-brand text-white" href="#">TIMED</a>
+                </nav>
+              </div>
+              <div class="col-md-4">
+                  <div class="form-floating mt-3">
+                     <h4 class="text-white">Admin panel</h4>
+                    </div>
+              </div>
+              <div class="col-md-4 d-flex justify-content-end gap-5  icons">
+                  <i class="bi bi-box-arrow-right"></i>
+                  <i class="bi bi-person-fill"></i>
+      
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <div class="admin-section">
+       <div class="sidebar p-4 ps-0 text-center">
+   <a href="/admin/" style="color:#51624F">Dashboard</a>
+   <a href="/admin/category">Categories</a>
+    <a href="/admin/product" style="color:black">Products</a>
+    <a href="/admin/user" style="color:black">Users</a>
+    <a href="/admin/banner" style="color:black">Banners</a>
+    <a href="/admin/orders" style="color:black">Orders</a>
+    <a href="/admin/coupons" style="color:black">Coupons</a>
+    <a href="/admin/banned" style="color:black">Banned Users</a>
+</div>
+
+  <div class="container w-75">
+    <div class="row container product-btn mt-5">
+        <div class="col-md-3 product-btn">
+           
+            <a href="/admin/addCategory " class="btn btn-success add-prdct-btn"> Add Category</a>
+        </div>
+    </div>
+<h2 class="text-center"> Categories</h2>
+    <table class="table w-50 mt-2" >
+  <thead class="bg-dark text-white">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Category</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody class="text-white">
+    {{#each categories}}
+    <tr>
+      
+      <td>{{@index}}</td>
+      <td>{{this.category}}</td>
+      <td><a href="/admin/categoryEdit/" class="btn btn-primary">Edit</a>  
+     <a href="/admin/categoryDelete/{{this._id}}" class="btn btn-danger">Delete</a></td>
+     
+     
+     
+
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+ </div>

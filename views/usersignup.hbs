@@ -1,0 +1,62 @@
+ <div class="title">
+           <h1>TIMED</h1>
+    </div>
+    <section class="vh-100 gradient-custom">
+        <div class="container py-5 h-100">
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+              <div class="card  text-white" style="border-radius: 1rem; background-color: #464859;">
+                <div class="card-body p-5 text-center">
+      
+                  <div class="mb-md-5 mt-md-4 pb-5">
+      
+                    <h2 class="fw-bold mb-2 text-uppercase">Signup</h2>
+                    <p class="text-white-50 mb-5">Please enter Details!</p>
+                    
+                    <form action="/usersignup" method="post">
+                     <p class="text-danger">{{error}}</p>
+                     <p class="text-danger">{{errormsg}}</p> 
+                      <div class="form-outline text-start form-white mb-4 ">
+                        <label class="form-label" for="typeEmailX">Username</label>
+                      <input type="text" id="typeEmailX" class="form-control bg-dark form-control-lg" name="uname" />
+                    </div>
+                    
+                    <div class="form-outline text-start form-white mb-4 ">
+                        <label class="form-label" for="typeEmailX">Email</label>
+                      <input type="email" id="typeEmailX" class="form-control bg-dark form-control-lg" name="uemail" />
+                    </div>
+      
+                    <div class="form-outline text-start  form-white mb-4 ">
+                        <label class="form-label">Phone Number</label>
+                      <input type="number" pattern="[0-9]{10}" id="typeEmailX" class="form-control bg-dark  form-control-lg" name="uphone" />
+                    </div>
+                    
+                    <div class="form-outline text-start form-white mb-4">
+                        <label class="form-label " for="typePasswordX">Password</label>
+                      <input type="password" id="typePasswordX" class="form-control bg-dark form-control-lg" name="upword" />
+                    </div>
+                    
+                    <div class="form-outline text-start form-white mb-4">
+                        <label class="form-label " for="typePasswordX">Confirm Password</label>
+                      <input type="password" id="typePasswordX" class="form-control bg-dark form-control-lg" name="confirmpword" />
+                    </div>
+                    </form>
+                    
+      
+                   
+      
+                    <button class="btn btn-outline-light btn-lg px-5" type="submit">Signup</button>
+      
+                  </div>
+      
+                  <div>
+                    <p class="mb-0">Already have an account? <a href="/userlogin" class="text-primary-50 fw-bold">Log In</a>
+                    </p>
+                  </div>
+      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section> 
