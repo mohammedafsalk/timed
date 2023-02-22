@@ -1,0 +1,81 @@
+<div class="profile-main">
+    <div class="container pt-5">
+        <h3>Profile</h3>
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div class="profile-container">
+                    <div class="profil-row">
+                        <b>Name : </b><span>{{user.name}}</span>
+                    </div>
+                    <div class="profil-row">
+                        <b>Email : </b><span>{{user.email}}</span>
+                    </div>
+                    <div class="profil-row">
+                        <b>Password : </b><span>
+                            <i class="ri-checkbox-blank-circle-fill"></i>
+                            <i class="ri-checkbox-blank-circle-fill"></i>
+                            <i class="ri-checkbox-blank-circle-fill"></i>
+                            <i class="ri-checkbox-blank-circle-fill"></i>
+                            <i class="ri-checkbox-blank-circle-fill"></i>
+                            <i class="ri-checkbox-blank-circle-fill"></i>
+                        </span>
+                    </div>
+                    <div class="profil-row">
+                        <button onclick="window.location.href='/edit-profile'">Edit</button>
+                        <a href="/logout">
+                            <button>Logout</button>
+
+                        </a>
+                    </div>
+                </div>
+                <div class="porfile-items">
+                    <a href="/cart" class="profile-item">
+                        <b>Cart</b>
+                        <i class="ri-shopping-cart-line"></i>
+                    </a>
+                </div>
+                <div class="porfile-items">
+                    <a href="/wishlist" class="profile-item">
+                        <b>Wishlist</b>
+                        <i class="ri-heart-line"></i>
+                    </a>
+                </div>
+                <div class="porfile-items">
+                    <a href="/orders" class="profile-item">
+                        <b>Order History</b>
+                        <i class="ri-shopping-bag-2-line"></i>
+                    </a>
+                </div>
+                <div class="porfile-items">
+                    <a href="/coupons" class="profile-item">
+                        <b>Coupons</b>
+                        <i class="ri-coupon-2-line"></i>
+                    </a>
+                </div>
+                <div class="row"></div>
+            </div>
+            <div class="col-12 col-md-6">
+                    <div class="d-flex justify-content-between">
+                        <h4>Manage address </h4>
+                        <a href="/add-address" class="btn btn-dark rounded-0 ">Add</a>
+                    </div>
+                            {{#each user.address}}
+                <div class="manage-profile-address pt-3">
+                    <div class="manage-address-row">
+                        <div class="man-ad-left">
+                            <b>Name</b><span>{{this.name}}</span>
+                            <b>Mobile</b><span>{{this.mobile}}</span>
+                            <b>Address</b><span>{{this.address}}</span>
+                            <b>Pincode</b><span>{{this.pincode}}</span>
+                        </div>
+                        <div class="man-ad-right">
+                            <a href="/delete-address/{{this._id}}"><i class="ri-delete-bin-5-line"></i></a>
+                            <a href="/edit-address/"><i class="ri-edit-box-line"></i></a>
+                        </div>
+                    </div>
+                </div>
+                            {{/each}}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,11 +1,19 @@
 const mongoose = require('mongoose')
 
 const productSchema = new mongoose.Schema({
-    productName:String,
-    productCategory:String,
+    name:String,
+    product:Object,
+    productSub:Array,
+    category:String,
     quantity:Number,
     price:Number,
-    ProductDescrpition:String,
+    brand:String,
+    description:String,
+    list:
+    {
+        type:Boolean,
+        default:true,
+    }
     
 })
 

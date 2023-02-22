@@ -1,79 +1,157 @@
-const express = require('express')
-const userModel = require('../models/userModel')
-const adminModel = require('../models/adminModel')
-const categoryModel = require('../models/categoryModel')
-const productModel = require('../models/productModel')
+const express = require("express");
+const userModel = require("../models/userModel");
+const adminModel = require("../models/adminModel");
+const categoryModel = require("../models/categoryModel");
+const productModel = require("../models/productModel");
+const { findByIdAndUpdate } = require("../models/userModel");
 const router = express.Router();
 
-const getAdminHome=(req,res)=>{
-    res.render('adminHome')
-}
+module.exports = {
+  getAdminHome: (req, res) => {
+    res.render("admin/home");
+  },
 
-const getAddProduct=async(req,res)=>{
+  getadminlogin: (req, res) => {
+    res.render("admin/login");
+  },
 
-    const categories = await categoryModel.find().lean()
-    res.render('addProduct',{categories})
-}
+  getOrders: (req, res) => {
+    res.render("admin/orders");
+  },
 
-const getAdminProduct=async(req,res)=>{
+  getBanner: (req, res) => {
+    res.render("admin/banners");
+  },
 
-    const products = await productModel.find().lean()
-    res.render('adminProduct',{products})
-}
+  getCoupons: (req, res) => {
+    res.render("admin/coupons");
+  },
 
-const addProduct =(req,res)=>{
-     
-    const {name:proname,category:procategory,price,quantity,description:prodescrpition} = req.body;
+  login: (req, res) => {
     console.log(req.body);
+    const email = "admin123@gmail.com";
+    const password = "1234";
 
-    // if(category ===""|| name ==""|| quantity ===""||price ===""||description ===""){
-    //     const error = "Please fill every field"
-    //     res.render('addProduct',{error})
-    // }else{
-    //     const products = new productModel({})
-    //     console.log(products);
-    //     res.redirect('/admin/product')
-    // }
-    const products = new productModel({productName:proname,productCategory:procategory,price:price,quantity:quantity,ProductDescrpition:prodescrpition})
-        products.save()
-        console.log(products);
-        res.redirect('/admin/product')
-   
-}
+    if (email == req.body.email && password == req.body.password) {
+      res.redirect("/admin");
+    } else {
+      res.render("admin/login", { error: "Email or Password is Incorrect!" });
+    }
+  },
 
-const getAdminCategory=async(req,res)=>{
+  getAddProduct: async (req, res) => {
+    const categories = await categoryModel.find().lean();
+    res.render("admin/addProduct", { categories });
+  },
 
-    const categories = await categoryModel.find().lean()
+  getAdminProduct: async (req, res) => {
+    const products = await productModel.find().lean();
+    res.render("admin/product", { products });
+  },
 
-    res.render('adminCategory',{categories})
-}
+  addProduct: (req, res) => {
+    productModel
+      .create({
+        name: req.body.name,
+        product: req.files.product[0],
+        productSub: req.files.subImages,
+        category: req.body.category,
+        price: req.body.price,
+        brand: req.body.brand,
+        description: req.body.description,
+        quantity: req.body.quantity,
+      })
+      .then((products) => {
+        res.redirect("/admin/product");
+      })
+      .catch((Error) => {
+        console.log(Error);
+        res.render("addProduct");
+      });
+  },
 
-const getAddCategory=(req,res)=>{
-    res.render('addCategory')
-}
+  getEditProduct:async(req,res)=>{
 
-const addCategory = async(req,res)=>{
-   const category = req.body.category
-   console.log(category);
+    const _id = req.params.id
+    const product = await productModel.findById({_id}).lean()
+    const category = await categoryModel.find().lean()
+    console.log(category);
+    console.log((product));
+     res.render('admin/editProduct',{product,category})
+  },
 
-   const newCategory = await categoryModel.findOne({category})
+  editProduct:async(req,res)=>{
+      const _id = req.body._id
+      await productModel.findByIdAndUpdate(_id,{$set:{
+        name:req.body.name,
+        brand:req.body.brand
+      }})
+      res.redirect('/admin/product')
+  },
 
-   if(newCategory){
-     const error = "category exists"
-     res.render('addCategory',{error})
-   }else{
-    const categories = new categoryModel({category})
-    categories.save()
-    res.redirect('/admin/category')
-   }
-}
+  getDeleteProduct: async (req, res) => {
+    const _id = req.params.id;
 
-const deleteCategory = async(req,res)=>{
-    const id = req.params.id
-    await categoryModel.deleteOne({_id:id})
-    res.redirect('/admin/category')
-}
+    await productModel.findByIdAndDelete({ _id });
+    res.redirect("/admin/product");
+  },
 
-module.exports={
-  getAdminHome,getAddProduct,getAdminProduct,getAdminCategory,getAddCategory,addCategory,deleteCategory,addProduct
-}
+  getAdminCategory: async (req, res) => {
+    const categories = await categoryModel.find().lean();
+
+    res.render("admin/category", { categories });
+  },
+
+  getAddCategory: (req, res) => {
+    res.render("admin/addCategory");
+  },
+
+  getEditCategory: async (req, res) => {
+    const _id = req.params.id;
+    const category = await categoryModel.findOne({ _id }).lean();
+    res.render("admin/editCategory", { category });
+  },
+
+  editCategory: async (req, res) => {
+    const _id = req.body._id;
+    await categoryModel.findOneAndUpdate(_id, {
+      $set: { category: req.body.category },
+    });
+    res.redirect("/admin/category");
+  },
+
+  addCategory: async (req, res) => {
+    const category = req.body.category;
+
+    const newCategory = await categoryModel.findOne({ category });
+
+    if (newCategory) {
+      const error = "category exists";
+      res.render("admin/addCategory", { error });
+    } else {
+      const categories = new categoryModel({ category });
+      categories.save();
+      res.redirect("/admin/category");
+    }
+  },
+
+  deleteCategory: async (req, res) => {
+    const id = req.params.id;
+    await categoryModel.deleteOne({ _id: id });
+    res.redirect("/admin/category");
+  },
+
+  unlist: async (req, res) => {
+    const _id = req.params.id;
+
+    await productModel.findByIdAndUpdate({ _id }, { $set: { list: false } });
+    res.redirect("/admin/product");
+  },
+
+  list: async (req, res) => {
+    const _id = req.params.id;
+
+    await productModel.findByIdAndUpdate({ _id }, { $set: { list: true } });
+    res.redirect("/admin/product");
+  },
+};

@@ -1,0 +1,59 @@
+
+<div class="add-product-main">
+    <h3>Add Product</h3>
+    <form class="add-product-container mt-3" id="addProductForm" action="/admin/addProduct" method="post" enctype="multipart/form-data">
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Name">Product Name</label>
+                <input type="text" name="name"  required>
+            </div>
+            <div class="a-p-form-col">
+                <label for="Name">Brand Name</label>
+                <input type="text" name="brand"  required>
+            </div>
+            <div class="a-p-form-col">
+                <label for="Category">Category</label>
+                <select name="category" required>
+                    {{#each categories}}
+                    <option value="{{this.category}}">{{this.category}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Category">Quanitity</label>
+                <input type="number" name="quantity"  required>
+            </div>
+        </div>
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Category">Price</label>
+                <input type="number" name="price"  required>
+            </div>
+        </div>
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Category">Description</label>
+                <textarea name="description" rows="4" form="addProductForm" ></textarea>
+            </div>
+        </div>
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Category">Main Image</label>
+                <input type="file" name="product" accept="image/*" required>
+            </div>
+        </div>
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Category">Other Images</label>
+                <input type="file" name="subImages" accept="image/*" multiple>
+            </div>
+            
+        </div>
+            <b class="text-danger"></b>
+        <div class="a-p-form-row">
+            <button type="submit" class="btn btn-dark text-white">Add product</button>
+        </div>
+    </form>
+</div>

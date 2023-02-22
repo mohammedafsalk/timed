@@ -1,0 +1,60 @@
+
+<div class="add-product-main">
+    <h3>Edit Product</h3>
+    <form class="add-product-container mt-3" id="addProductForm" action="/admin/editProduct" method="post" enctype="multipart/form-data">
+    <input type="number" value="{{product._id}}" style="height: 0px; visibility:hidden" name="_id">
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Name">Product Name</label>
+                <input type="text" name="name" value="{{product.name}}"  required>
+            </div>
+            <div class="a-p-form-col">
+                <label for="Name">Brand Name</label>
+                <input type="text" name="brand" value="{{product.brand}}" required>
+            </div>
+            <div class="a-p-form-col">
+                <label for="Category">Category</label>
+                <select name="category" required>
+                    {{#each category}}
+                    <option value="">{{this.category}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Category">Quanitity</label>
+                <input type="number" name="quantity"  value="{{product.quantity}}" required>
+            </div>
+        </div>
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Category">Price</label>
+                <input type="number" name="price" value="{{product.price}}" required>
+            </div>
+        </div>
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Category">Description</label>
+                <textarea name="description"  rows="4" form="addProductForm" >{{product.description}}</textarea>
+            </div>
+        </div>
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Category">Main Image</label>
+                <input type="file" name="product" accept="image/*" >
+            </div>
+        </div>
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Category">Other Images</label>
+                <input type="file" name="subImages" accept="image/*" multiple>
+            </div>
+            
+        </div>
+            <b class="text-danger"></b>
+        <div class="a-p-form-row">
+            <button type="submit" class="btn btn-dark text-white">Save Changes</button>
+        </div>
+    </form>
+</div>

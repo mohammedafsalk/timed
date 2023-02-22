@@ -22,33 +22,32 @@
 
       <div class="admin-section">
        <div class="sidebar p-4 ps-0 text-center">
-   <a href="/admin/" style="color:#51624F">Dashboard</a>
-   <a href="/admin/category">Categories</a>
+   <a href="/admin/" style="color:black">Dashboard</a>
+   <a href="/admin/category" style="color: #51624F;">Categories</a>
     <a href="/admin/product" style="color:black">Products</a>
     <a href="/admin/user" style="color:black">Users</a>
     <a href="/admin/banner" style="color:black">Banners</a>
     <a href="/admin/orders" style="color:black">Orders</a>
     <a href="/admin/coupons" style="color:black">Coupons</a>
-    <a href="/admin/banned" style="color:black">Banned Users</a>
 </div>
 
   <div class="container w-75">
     <div class="row container product-btn mt-5">
         <div class="col-md-3 product-btn">
            
-            <a href="/admin/addCategory " class="btn btn-success add-prdct-btn"> Add Category</a>
+            <a href="/admin/addCategory " class="btn btn-dark text-white add-prdct-btn"> Add Category</a>
         </div>
     </div>
 <h2 class="text-center"> Categories</h2>
-    <table class="table w-50 mt-2" >
-  <thead class="bg-dark text-white">
+    <table class="table w-50 mt-2 tablerow" >
+  <thead class=" text-dark h5">
     <tr>
       <th scope="col">#</th>
       <th scope="col">Category</th>
       <th scope="col">Action</th>
     </tr>
   </thead>
-  <tbody class="text-white">
+  <tbody class="text-dark h6">
     {{#each categories}}
     <tr>
       
