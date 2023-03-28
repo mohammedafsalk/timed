@@ -1,0 +1,121 @@
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<!-- Header Section Begin -->
+<header class="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-3">
+                <div class="header__logo">
+                    <a href="#">
+                        <h2>TIMED.</h2>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <nav class="header__menu mobile-menu">
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/product-list">Store</a></li>
+                        <li><a href="/userprofile">Profile</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="header__nav__option">
+                    <a href="/wishlist"><img src="/img/icon/heart-line.png" alt=""></a>
+                    <a href="/cart"><img src="/img/icon/shopping-cart-line.png" alt=""></a>
+                    <a href="/logout"><img src="/img/icon/logout-circle-r-line.png" alt=""></a>
+
+                </div>
+            </div>
+        </div>
+        <div class="canvas__open"><i class="fa fa-bars"></i></div>
+    </div>
+</header>
+<!-- Header Section End -->
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Order Details</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container maindiv py-4 my-4 mx-auto d-flex flex-column">
+    <div class="header">
+        <div class="row r1">
+            <div class="col-md-12 abc text-center">
+                <h1>{{item.product.name}}</h1>
+            </div>
+        </div>
+    </div>
+    <div class="container-body mt-4">
+        <div class="row r3">
+            <div class="col-md-5 p-0 klo">
+                <ul class="order-ul">
+                    <li>Product Name: <b> {{item.product.name}}</b></li>
+                    <li>Quantity: <b> {{item.quantity}} </b> </li>
+                    <li>Total: <b> {{item.total}} </b></li>
+                    <li>Amount: <b> {{item.amountPayable}} </b></li>
+                    <li><b>Address: </b> </li>
+                    <li class="d-flex flex-column ps-3">
+                        <div>
+                            <span>Name: </span><b>{{item.address.name}}</b>
+                        </div>
+                        <div>
+                            <span>Mobile: </span><b>{{item.address.mobile}}</b>
+                        </div>
+                        <div>
+                            <span>Address: </span><b>{{item.address.address}}</b>
+                        </div>
+                        <div>
+                            <span>PinCode: </span><b>{{item.address.pincode}}</b>
+                        </div>
+                    </li>
+                    <li>Order Status: <b> {{item.orderStatus}} </b></li>
+                    {{#if status}}
+                    <li>Deliverd On: <b> {{dispatch}} </b></li>
+                    {{else}}
+                    <li>Expect Delivery On: <b> {{dispatch}} </b></li>
+                    {{/if}}
+                </ul>
+            </div>
+            <div class="col-md-7"> <img src="/images/{{item.product.product.filename}}" style="width:75%;"> </div>
+        </div>
+        {{#if notCancelled}}
+        {{#unless returned}}
+        {{#if status}}
+        <div class="col-md-4 myt w-100">
+            <button type="button" class="btn btn-dark text-white w-50">
+                <a href="/returnProduct/{{item._id}}">Return</a>
+            </button>
+        </div>
+        {{else unless confirm}}
+        <div class="col-md-4 myt w-100">
+            <button type="button" class="btn btn-dark text-white w-50">
+                <a href="/cancelProduct/{{item._id}}">Cancel</a>
+            </button>
+        </div>
+        {{/if}}
+    </div>
+    {{/unless}}
+    {{else}}
+    <b class="text-danger">Cancelled</b>
+    {{/if}}
+    {{#if returned}}
+    <b class="text-danger">Return In Process</b>
+    {{/if}}
+    {{#if confirm}}
+    <b class="text-danger">Returned</b>
+    {{/if}}
+
+</div>
+</div>

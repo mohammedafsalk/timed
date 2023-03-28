@@ -1,0 +1,39 @@
+<div class="add-product-main">
+    <h3>Add Banner</h3>
+    <form class="add-product-container mt-3" id="addProductForm" action="/admin/editBanner" method="post"
+        enctype="multipart/form-data">
+        <input type="text" value="{{banner._id}}" style="height: 0px; visibility:hidden" name="_id">
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Category">Product Name</label>
+                <input type="text" name="name" value="{{banner.productName}}" required>
+            </div>
+        </div>
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Category">URL of Product</label>
+                <input type="text" name="url" value="{{banner.url}}" required>
+            </div>
+        </div>
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Category">Description</label>
+                <textarea name="description" rows="4" form="addProductForm">{{banner.desc}}</textarea>
+            </div>
+        </div>
+        <div class="a-p-form-row">
+            <div class="a-p-form-col">
+                <label for="Category">Banner Image</label>
+                <input type="file" name="image" accept="image/*">
+            </div>
+        </div>
+        <div class="a-p-form-row">
+            <div class="a-p-form-img" id="oldImage">
+                <img src="/images/{{banner.img}}" alt="">
+            </div>
+            <b class="text-danger"></b>
+            <div class="a-p-form-row">
+                <button type="submit" class="btn btn-dark text-white">Save Changes</button>
+            </div>
+    </form>
+</div>

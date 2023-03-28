@@ -1,5 +1,6 @@
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " style="max-height:100vh; overflow:hidden" id="sidenav-main">
-    <div class="sidenav-header">
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
+  style="max-height:100vh; overflow:hidden" id="sidenav-main">
+  <div class="sidenav-header">
     <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
       aria-hidden="true" id="iconSidenav"></i>
     <a class="navbar-brand m-0" href="https://demos.creative-tim.com/soft-ui-dashboard/pages/dashboard.html"
@@ -14,109 +15,124 @@
         <a class="nav-link" href="/admin/">
           <h5 class="nav-link-text ms-1 d-flex align-items-center ">
             <i class="ri-bar-chart-fill me-2"></i>
-            Dashboard</h5>
+            Dashboard
+          </h5>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link " href="/admin/product">
           <h5 class="nav-link-text ms-1 d-flex align-items-center">`
             <i class="ri-time-fill me-2"></i>
-            Products</h5>
+            Products
+          </h5>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link active" href="/admin/category">
           <h5 class="nav-link-text ms-1 d-flex align-items-center ">
             <i class="ri-grid-fill me-2"></i>
-            Category</h5>
+            Category
+          </h5>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/admin/orders">
           <h5 class="nav-link-text ms-1 d-flex align-items-center">
             <i class="ri-shopping-bag-2-fill me-2"></i>
-            Orders</h5>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/admin/user">
-          <h5 class="nav-link-text ms-1 d-flex align-items-center ">
-            <i class="ri-user-fill me-2"></i>
-            Users</h5>
+            Orders
+          </h5>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link " href="/admin/banners">
           <h5 class="nav-link-text ms-1 d-flex align-items-center ">
             <i class="ri-percent-fill me-2"></i>
-            Banner</h5>
+            Banner
+          </h5>
         </a>
       </li>
       <a class="nav-link " href="/admin/coupons">
         <h5 class="nav-link-text ms-1 d-flex align-items-center ">
-            <i class="ri-ticket-fill me-2"></i>
-            Coupons</h5>
+          <i class="ri-ticket-fill me-2"></i>
+          Coupons
+        </h5>
       </a>
       </li>
     </ul>
   </div>
-  </aside>
-  <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
-    <!-- Navbar -->
-    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
-      <div class="container-fluid py-1 px-3">
-        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4 justify-content-between" id="navbar">
-          <h2>Category</h2>
-          <ul class="navbar-nav  justify-content-end">
-            <li class="nav-item">
-              <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
-                <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Logout</span>
-              </a>
-            </li>                  
-          </ul>
-        </div>
+</aside>
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+  <!-- Navbar -->
+  <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
+    navbar-scroll="true">
+    <div class="container-fluid py-1 px-3">
+      <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4 justify-content-between" id="navbar">
+        <h2>Category</h2>
+        <ul class="navbar-nav  justify-content-end">
+          <li class="nav-item">
+            <a href="admin/logout" class="nav-link text-body font-weight-bold px-0">
+              <i class="fa fa-user me-sm-1"></i>
+              <span class="d-sm-inline d-none">Logout</span>
+            </a>
+          </li>
+        </ul>
       </div>
-    </nav>
-    <!-- End Navbar -->
-    <div class="container-fluid py-4">
-      <div class="row">
-        <div class="col-12 container d-flex justify-content-center aligin-items-center">
-          <div class="card mb-4 w-75">
-            <div class="card-header pb-0 text-center">
-            <a href="/admin/add-category" class="btn btn-dark text-white ">Add Category</a>
-            </div>
-            <div class="card-body px-0 pt-0 pb-2">
-              <div class="table-responsive p-0">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-center text-uppercase text-dark  font-weight-bolder">Category</th>
-                      <th class=" text-uppercase text-dark  font-weight-bolder">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {{#each categories}}
-                    <tr>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary  font-weight-bold">{{this.category}}</span>
-                      </td>
-                      <td class="align-middle d-flex gap-3">
-                        <a href="/admin/edit-category/{{this._id}}" class="text-primary font-weight-bold " >
-                          Edit
-                        </a>
-                        <a href="/admin/delete-category/{{this._id}}" class="text-danger font-weight-bold " >
-                          Delete
-                        </a>
-                      </td>
-                    </tr>
-                    {{/each}}
-                  </tbody>
-                </table>
+    </div>
+  </nav>
+  <!-- End Navbar -->
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="container-fluid py-4">
+        <div class="row">
+          <div class="col-12">
+            <a href="/admin/add-category" class="btn btn-dark ms-2">Add Category</a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="card mb-4">
+              <div class="card-header pb-0">
+                <h6>Cateogory</h6>
+                <h6 class="text-danger text-center" id="msgDiv">{{msg}}</h6>
+              </div>
+              <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                  <table class="table align-items-center mb-0">
+                    <thead>
+                      <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Categories</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                          Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each categories}}
+                      <tr>
+
+                        <td>
+                          <p class="text-xs font-weight-bold mb-0">{{this.category}}</p>
+                        </td>
+
+                        <td class="align-middle text-center">
+                          <a href="/admin/edit-category/{{this._id}}" class="btn btn-outline-dark">Edit</a>
+                          <a href="/admin/delete-category/{{this._id}}" class="btn btn-dark">Delete</a>
+                        </td>
+                      </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </main>
+  </div>
+</main>
+
+<script>
+  setTimeout(function () {
+    document.getElementById('msgDiv').style.display = 'none';
+  }, 5000);
+</script>

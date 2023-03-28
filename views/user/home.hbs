@@ -3,7 +3,7 @@
         <div class="loader"></div>
     </div>
         <!-- Offcanvas Menu Begin -->
-    <div class="offcanvas-menu-overlay"></div>
+    {{!-- <div class="offcanvas-menu-overlay"></div>
     <div class="offcanvas-menu-wrapper">
         <div class="offcanvas__option">
             <div class="offcanvas__links">
@@ -28,75 +28,80 @@
         <div class="offcanvas__text">
             <p>Free shipping, 30-day return or refund guarantee.</p>
         </div>
-    </div>
+    </div> --}}
     <!-- Offcanvas Menu End -->
     <!-- Header Section Begin -->
-    <header class="header">
+     <header class="header">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                        <a href="#"><h2>TIMED.</h2></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <nav class="header__menu mobile-menu">
                         <ul>
-                            <li class="active"><a href="./index.html">Home</a></li>
-                            <li><a href="./shop.html">Store</a></li>
+                            <li class="active"><a href="/">Home</a></li>
+                            <li><a href="/product-list">Store</a></li>
                             <li><a href="/userprofile">Profile</a></li>
                         </ul>
                     </nav>
                 </div>
+                {{#if user}}
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
-                        <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                        <a href="#"><img src="img/icon/heart.png" alt=""></a>
-                        <a href="/logout"><img src="img/icon/cart.png" alt=""> 
-                        <a href="/logout"><img src="img/icon/user-line.png" alt=""> 
+                        <a href="/wishlist"><img src="img/icon/heart-line.png" alt=""></a>
+                        <a href="/cart"><img src="img/icon/shopping-cart-line.png" alt=""></a> 
+                        <a href="/logout"><img src="img/icon/logout-circle-r-line.png" alt=""></a> 
                         
                     </div>
                 </div>
+                {{/if}}
             </div>
             <div class="canvas__open"><i class="fa fa-bars"></i></div>
         </div>
     </header>
-    <!-- Header Section End -->
 
-    <!-- Hero Section Begin -->
     <section class="hero">
-        <div class="hero__slider owl-carousel">
-            <div class="hero__items set-bg" data-setbg="/img/hero/hero-1.jpg" style="background-image: url(/img/hero/hero-1.jpg);">
+         <div class="hero__slider owl-carousel"> 
+            <div class="hero__items set-bg" data-setbg="/img/banner2.jpg">
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-5 col-lg-7 col-md-8">
                             <div class="hero__text">
-                                <h6>Summer Collection</h6>
-                                <h2>Fall - Winter Collections 2030</h2>
-                                <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
-                                commitment to exceptional quality.</p>
+                                <h6>Keep it Casual And Humble!</h6>
+                                <h2>Brand New Tommy Hilfiger Series Is Here</h2>
+                                <p>Tommy Hilfiger analog watches feature classic designs with quality craftsmanship, perfect for both formal and casual wear.</p>
                                 <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
-                                <div class="hero__social">
-                                    <a href="#"><i class="fa fa-facebook"></i></a>
-                                    <a href="#"><i class="fa fa-twitter"></i></a>
-                                    <a href="#"><i class="fa fa-pinterest"></i></a>
-                                    <a href="#"><i class="fa fa-instagram"></i></a>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="hero__items set-bg" data-setbg="img/hero/hero-2.jpg">
+            <div class="hero__items set-bg" data-setbg="/img/banner3.jpg">
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-5 col-lg-7 col-md-8">
                             <div class="hero__text">
-                                <h6>Summer Collection</h6>
-                                <h2>Fall - Winter Collections 2030</h2>
-                                <p>A specialist label creating luxury essentials. Ethically crafted with an unwavering
-                                commitment to exceptional quality.</p>
-                                <a href="#" class="primary-btn">Shop now <i class="ei ei-arrow_up"></i></a>
+                                <h6>Get Smart With Apple !</h6>
+                                <h2>Brand New Apple Watch-Ultra Is Here</h2>
+                                <p>The Apple Watch is a smartwatch that offers fitness tracking, communication, and mobile payment features.</p>
+                                <a href="/product/6414642a67e4898bd111f114" class="primary-btn">Shop now <span class="arrow_right"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero__items set-bg" data-setbg="/img/banner4.jpg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-5 col-lg-7 col-md-8">
+                            <div class="hero__text">
+                                <h6>Now Life Get's Easy On The Go !</h6>
+                                <h2>Brand New Xiaomi Mi-Sport 3 Is Here</h2>
+                                <p>Xiaomi fitness bands are affordable and feature-packed wearables that offer accurate activity tracking and health monitoring.</p>
+                                <a href="#" class="primary-btn">Shop now <span class="arrow_right"></span></a>
                             </div>
                         </div>
                     </div>
@@ -104,49 +109,56 @@
             </div>
         </div>
     </section>
+  
     <!-- Hero Section End -->
 
     <!-- Banner Section Begin -->
     <section class="banner spad">
         <div class="container">
             <div class="row">
+                <div class="col-lg-12">
+                    <ul class="filter__controls">
+                        <li class="active">Best Sellers</li>
+                    </ul>
+                </div>
                 <div class="col-lg-7 offset-lg-4">
                     <div class="banner__item">
                         <div class="banner__item__pic">
-                            <img src="img/banner/61+mEROaHHL._SL1500_.jpg" alt="">
+                            <img src="/img/applewatch1.png"  alt="">
                         </div>
                         <div class="banner__item__text">
-                            <h2>SmartWatches</h2>
-                            <a href="#">Shop now</a>
+                            <h2>Apple Watch Ultra</h2>
+                            <a href="/product-list">Shop now</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-5">
                     <div class="banner__item banner__item--middle">
                         <div class="banner__item__pic">
-                            <img src="img/banner/D218.jpg" alt="">
+                            <img src="/img/fitnesstrack.png" alt="">
                         </div>
                         <div class="banner__item__text">
-                            <h2>Digital Watches</h2>
-                            <a href="#">Shop now</a>
+                            <h2>Fastrack Reflex</h2>
+                            <a href="/product-list">Shop now</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-7">
                     <div class="banner__item banner__item--last">
                         <div class="banner__item__pic">
-                            <img src="/img/banner/61qj0ugONRL._AC_SS450_.jpg" alt="">
+                            <img src="/img/analog.png" alt="">
                         </div>
                         <div class="banner__item__text">
-                            <h2>Analog-Digital Watches</h2>
-                            <a href="#">Shop now</a>
+                            <h2>Tommy Hilfiger</h2>
+                            <a href="/product-list">Shop now</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- Banner Section End -->
+
+
 
     <!-- Product Section Begin -->
     <section class="product spad">
@@ -161,17 +173,23 @@
             <div class="row product__filter">
                 {{#each products}}
                 {{#if this.list}}
-                <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" style="background-size: contain;" data-setbg="/images/{{this.product.filename}}">
-                            <span class="label">New</span>
+                 <div class="col-lg-3 col-md-6 col-sm-6 col-md-6 col-sm-6 mix new-arrivals">
+                    <div class="product__item sale">
+                        <div class="product__item__pic set-bg" data-setbg="/images/{{this.product.filename}}">
                             <ul class="product__hover">
-                                <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                                 <li><a href="/addTowishlist/{{this._id}}"><img src="img/icon/heart.png" alt=""></a></li>
                             </ul>
                         </div>
                         <div class="product__item__text">
                             <h6>{{this.name}}</h6>
-                            <a href="/product/{{this._id}}" class="add-cart">+ Add To Cart</a>
+                            <a href="/product/{{this._id}}" class="add-cart">View Product</a>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-o"></i>
+                            </div>
                             <h5>Rs.{{this.price}}</h5>
                         </div>
                     </div>

@@ -5,10 +5,16 @@ const userSchema = new mongoose.Schema({
     email:String,
     password:String,
     address:Array,
+    cart:Array,
+    wishlist:Array,
     ban:
     {
         type:Boolean,
         default:false,
+    },
+    wallet:{
+        type:Number,
+        default:0
     }
 })
 

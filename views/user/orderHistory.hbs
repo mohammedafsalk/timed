@@ -1,134 +1,106 @@
-  <div id="preloder">
-        <div class="loader"></div>
+<div id="preloder">
+  <div class="loader"></div>
+</div>
+
+<!-- Header Section Begin -->
+<header class="header">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3 col-md-3">
+        <div class="header__logo">
+          <a href="#">
+            <h2>TIMED.</h2>
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <nav class="header__menu mobile-menu">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/product-list">Store</a></li>
+            <li><a href="/userprofile">Profile</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="col-lg-3 col-md-3">
+        <div class="header__nav__option">
+          <a href="/wishlist"><img src="img/icon/heart-line.png" alt=""></a>
+          <a href="/cart"><img src="img/icon/shopping-cart-line.png" alt=""></a>
+          <a href="/logout"><img src="img/icon/logout-circle-r-line.png" alt=""></a>
+
+        </div>
+      </div>
     </div>
+    <div class="canvas__open"><i class="fa fa-bars"></i></div>
+  </div>
+</header>
+<!-- Header Section End -->
 
-    <!-- Header Section Begin -->
-    <header class="header">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-3">
-                    <div class="header__logo">
-                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6">
-                    <nav class="header__menu mobile-menu">
-                        <ul>
-                            <li><a href="./index.html">Home</a></li>
-                            <li class="active"><a href="./shop.html">Shop</a></li>
-                            <li><a href="#">Pages</a>
-                                <ul class="dropdown">
-                                    <li><a href="./about.html">About Us</a></li>
-                                    <li><a href="./shop-details.html">Shop Details</a></li>
-                                    <li><a href="./shopping-cart.html">Shopping Cart</a></li>
-                                    <li><a href="./checkout.html">Check Out</a></li>
-                                    <li><a href="./blog-details.html">Blog Details</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="./blog.html">Blog</a></li>
-                            <li><a href="./contact.html">Contacts</a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="header__nav__option">
-                        <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
-                        <a href="#"><img src="img/icon/heart.png" alt=""></a>
-                        <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-                        <div class="price">$0.00</div>
-                    </div>
-                </div>
-            </div>
-            <div class="canvas__open"><i class="fa fa-bars"></i></div>
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="breadcrumb__text">
+          <h4>Order History</h4>
         </div>
-    </header>
-    <!-- Header Section End -->
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Breadcrumb Section End -->
 
-    <!-- Breadcrumb Section Begin -->
-    <section class="breadcrumb-option">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="breadcrumb__text">
-                        <h4>Order History</h4>
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+  <div class="container">
+    {{#if empty}}
+    <div class="row">
+      <div class="d-flex justify-content-center align-items-center">
+        <img src="/img/empty.jpg" style="max-height: 300px; object-fit:contain" alt="">
+        <h1>Cart is empty !</h1>
+      </div>
+    </div>
+    {{else}}
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="shopping__cart__table">
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each orders}}
+              <tr>
+                <td class="product__cart__item">
+                  <div class="product__cart__item__pic">
+                    <a href="/vieworder/{{this._id}}"><img src="/images/{{this.product.product.filename}}"
+                        style="height:100px; width:100px; object-fit:contain" alt=""></a>
+                  </div>
+                  <div class="product__cart__item__text">
+                    <h6>{{this.product.name}}</h6>
+                    <h5>Rs.{{this.total}}</h5>
+                  </div>
+                </td>
+                <td class="quantity__item">
+                  <div class="quantity">
+                    <div class="pro-qty-2 text-center">
+                      <h6>{{this.quantity}}</h6>
                     </div>
-                </div>
-            </div>
+                  </div>
+                </td>
+                <td class="cart__price">{{this.orderStatus}}</td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
         </div>
-    </section>
-    <!-- Breadcrumb Section End -->
-
-    <!-- Shopping Cart Section Begin -->
-    <section class="shopping-cart spad">
-        <div class="container">
-            <div class="row d-flex justify-content-center">
-                <div class="col-6">
-                    <div class="shopping__cart__table">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    
-                                    <td class="product__cart__item">
-                                        <div class="product__cart__item__pic">
-                                            <img src="img/shopping-cart/cart-1.jpg" alt="">
-                                        </div>
-                                        <div class="product__cart__item__text">
-                                            <h6>T-shirt Contrast Pocket</h6>
-                                            <h5>$98.49</h5>
-                                        </div>
-                                    </td>
-                                    <td class="quantity__item">
-                                        <button class="btn btn-dark rounded-0">Add to cart</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="product__cart__item">
-                                        <div class="product__cart__item__pic">
-                                            <img src="img/shopping-cart/cart-2.jpg" alt="">
-                                        </div>
-                                        <div class="product__cart__item__text">
-                                            <h6>Diagonal Textured Cap</h6>
-                                            <h5>$98.49</h5>
-                                        </div>
-                                    </td>
-                                    <td class="quantity__item">
-                                        <button class="btn btn-dark rounded-0">Add to cart</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="product__cart__item">
-                                        <div class="product__cart__item__pic">
-                                            <img src="img/shopping-cart/cart-3.jpg" alt="">
-                                        </div>
-                                        <div class="product__cart__item__text">
-                                            <h6>Basic Flowing Scarf</h6>
-                                            <h5>$98.49</h5>
-                                        </div>
-                                    </td>
-                                    <td class="quantity__item">
-                                        <button class="btn btn-dark rounded-0">Add to cart</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="product__cart__item">
-                                        <div class="product__cart__item__pic">
-                                            <img src="img/shopping-cart/cart-4.jpg" alt="">
-                                        </div>
-                                        <div class="product__cart__item__text">
-                                            <h6>Basic Flowing Scarf</h6>
-                                            <h5>$98.49</h5>
-                                        </div>
-                                    </td>
-                                    <td class="quantity__item">
-                                        <button class="btn btn-dark rounded-0">Add to cart</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Shopping Cart Section End -->
+      </div>
+    </div>
+    {{/if}}
+  </div>
+</section>
+<!-- Shopping Cart Section End -->

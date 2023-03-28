@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-12 text-center">
+        <div class="header__logo">
+            <h3 class="text-dark" style="font-weight: bolder;">TIMED</h3>
+        </div>
+    </div>    
+</div>
+
+<section class="vh-50 gradient-custom">
+        <div class="container py-5 h-100">
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+              <div class="card  text-white" style="border-radius: 1rem; background-color:white">
+                <div class="card-body p-5 text-center">
+                  <div class="mb-md-5 mt-md-4 pb-5">
+                    <h3 class="fw-bold mb-2 text-dark">Edit Your Profile</h3>
+                    <form action="/edit-profile" method="post"> 
+                      <input type="text" value="{{user._id}}" style="height: 0px; visibility:hidden" name="_id">
+                      <div class="form-outline text-start form-dark mb-4 ">
+                        <label class="form-label text-dark" for="typeEmailX">Name</label>
+                      <input type="text" id="typeEmailX" class="form-control  form-control-lg rounded-0 border-1" name="name" value="{{user.name}}" />
+                    </div>
+                      <div class="form-outline text-start form-dark mb-4 ">
+                        <label class="form-label text-dark">Email</label>
+                      <input type="text" id="typeEmailX" class="form-control  form-control-lg rounded-0 border-1" name="email" value="{{user.email}}" />
+                    </div>
+                      <div class="form-outline text-start form-dark mb-4 ">
+                        <label class="form-label text-dark">Password</label>
+                      <input type="password" id="typeEmailX" class="form-control  form-control-lg rounded-0 border-1" name="password" value="{{user.password}}" />
+                    </div>
+                    <button type="submit" class="site-btn">Save Changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section> 

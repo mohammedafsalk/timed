@@ -39,13 +39,6 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/admin/user">
-          <h5 class="nav-link-text ms-1 d-flex align-items-center ">
-            <i class="ri-user-fill me-2"></i>
-            Users</h5>
-        </a>
-      </li>
-      <li class="nav-item">
         <a class="nav-link " href="/admin/banners">
           <h5 class="nav-link-text ms-1 d-flex align-items-center ">
             <i class="ri-percent-fill me-2"></i>
@@ -69,7 +62,7 @@
           <h2>Dashboard</h2>
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item">
-              <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
+              <a href="/admin/logout" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
                 <span class="d-sm-inline d-none">Logout</span>
               </a>
@@ -87,10 +80,9 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Today's Money</p>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Revenue</p>
                     <h5 class="font-weight-bolder mb-0">
-                      $53,000
-                      <span class="text-success text-sm font-weight-bolder">+55%</span>
+                      Rs.{{totalRevenue}}
                     </h5>
                   </div>
                 </div>
@@ -109,10 +101,9 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Today's Users</p>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Orders</p>
                     <h5 class="font-weight-bolder mb-0">
-                      2,300
-                      <span class="text-success text-sm font-weight-bolder">+3%</span>
+                      {{totalorders}}
                     </h5>
                   </div>
                 </div>
@@ -131,32 +122,9 @@
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">New Clients</p>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Products</p>
                     <h5 class="font-weight-bolder mb-0">
-                      +3,462
-                      <span class="text-danger text-sm font-weight-bolder">-2%</span>
-                    </h5>
-                  </div>
-                </div>
-                <div class="col-4 text-end">
-                  <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                    <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6">
-          <div class="card">
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col-8">
-                  <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Sales</p>
-                    <h5 class="font-weight-bolder mb-0">
-                      $103,430
-                      <span class="text-success text-sm font-weight-bolder">+5%</span>
+                      {{totalProducts}}
                     </h5>
                   </div>
                 </div>
@@ -169,9 +137,31 @@
             </div>
           </div>
         </div>
+        <div class="col-xl-3 col-sm-6">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Users</p>
+                    <h5 class="font-weight-bolder mb-0">
+                      {{totalUsers}}
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                    <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="row mt-4">
+      {{!-- <div class="row mt-4">
         <div class="col-lg-5 mb-lg-0 mb-4">
           <div class="card z-index-2">
             <div class="card-body p-3">
@@ -304,6 +294,101 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> --}}
+ <div class='col-md-12' id="afsal">
     </div>
   </main>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script>
+
+         var options = {
+          series: [44, 55, 41, 17, 15],
+          chart: {
+          type: 'donut',
+        },
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+        };
+
+        var pie = new ApexCharts(document.querySelector("#pie"), options);
+        pie.render();
+
+
+      
+        var options = {
+          series: [{
+          name: "sales",
+          data: [{
+            x: '2019/01/01',
+            y: 400
+          }, {
+            x: '2019/04/01',
+            y: 430
+          }, {
+            x: '2019/07/01',
+            y: 448
+          }, {
+            x: '2019/10/01',
+            y: 470
+          }, {
+            x: '2020/01/01',
+            y: 540
+          }, {
+            x: '2020/04/01',
+            y: 580
+          }, {
+            x: '2020/07/01',
+            y: 690
+          }, {
+            x: '2020/10/01',
+            y: 690
+          }]
+        }],
+          chart: {
+          type: 'bar',
+          height: 380
+        },
+        xaxis: {
+          type: 'category',
+          labels: {
+            formatter: function(val) {
+              return "Q" + dayjs(val).quarter()
+            }
+          },
+          group: {
+            style: {
+              fontSize: '10px',
+              fontWeight: 700
+            },
+            groups: [
+              { title: '2019', cols: 4 },
+              { title: '2020', cols: 4 }
+            ]
+          }
+        },
+        title: {
+            text: 'Grouped Labels on the X-axis',
+        },
+        tooltip: {
+          x: {
+            formatter: function(val) {
+              return "Q" + dayjs(val).quarter() + " " + dayjs(val).format("YYYY")
+            }  
+          }
+        },
+        };
+
+        var afsal = new ApexCharts(document.querySelector("#afsal"), options);
+        afsal.render();
+
+  </script>

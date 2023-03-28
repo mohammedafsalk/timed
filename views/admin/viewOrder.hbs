@@ -1,0 +1,154 @@
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs borders-0 borders-radius-xl my-3 fixed-start ms-3 "
+    style="max-height:100vh; overflow:hidden" id="sidenav-main">
+    <div class="sidenav-header">
+        <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+            aria-hidden="true" id="iconSidenav"></i>
+        <a class="navbar-brand m-0" href="https://demos.creative-tim.com/soft-ui-dashboard/pages/dashboard.html"
+            target="_blank">
+            <h4 class="ms-1 font-weight-bold">TIMED</h4>
+        </a>
+    </div>
+    <hr class="horizontal dark mt-0">
+    <div class="collapse navbar-collapse  w-auto  max-height-vh-100 h-100" id="sidenav-collapse-main">
+        <ul class="navbar-nav">
+            <li class="nav-orders">
+                <a class="nav-link" href="/admin/">
+                    <h5 class="nav-link-text ms-1 d-flex align-orderss-center ">
+                        <i class="ri-bar-chart-fill me-2"></i>
+                        Dashboard
+                    </h5>
+                </a>
+            </li>
+            <li class="nav-orders">
+                <a class="nav-link " href="/admin/product">
+                    <h5 class="nav-link-text ms-1 d-flex align-orderss-center">`
+                        <i class="ri-time-fill me-2"></i>
+                        Products
+                    </h5>
+                </a>
+            </li>
+            <li class="nav-orders">
+                <a class="nav-link " href="/admin/category">
+                    <h5 class="nav-link-text ms-1 d-flex align-orderss-center ">
+                        <i class="ri-grid-fill me-2"></i>
+                        Category
+                    </h5>
+                </a>
+            </li>
+            <li class="nav-orders">
+                <a class="nav-link active" href="/admin/orderss">
+                    <h5 class="nav-link-text ms-1 d-flex align-orderss-center">
+                        <i class="ri-shopping-bag-2-fill me-2"></i>
+                        Orders
+                    </h5>
+                </a>
+            </li>
+            <li class="nav-orders">
+                <a class="nav-link " href="/admin/banners">
+                    <h5 class="nav-link-text ms-1 d-flex align-orderss-center ">
+                        <i class="ri-percent-fill me-2"></i>
+                        Banner
+                    </h5>
+                </a>
+            </li>
+            <a class="nav-link " href="/admin/coupons">
+                <h5 class="nav-link-text ms-1 d-flex align-orderss-center ">
+                    <i class="ri-ticket-fill me-2"></i>
+                    Coupons
+                </h5>
+            </a>
+            </li>
+        </ul>
+    </div>
+</aside>
+<main class="main-content position-relative max-height-vh-100 h-100 mt-1 borders-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none borders-radius-xl" id="navbarBlur"
+        navbar-scroll="true">
+        <div class="container-fluid py-1 px-3">
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4 justify-content-between" id="navbar">
+                <h2>Order Details</h2>
+                <ul class="navbar-nav  justify-content-end">
+                    <li class="nav-orders">
+                        <a href="admin/logout" class="nav-link text-body font-weight-bold px-0">
+                            <i class="fa fa-user me-sm-1"></i>
+                            <span class="d-sm-inline d-none">Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+    <div class="container maindiv py-4 my-4 mx-auto d-flex flex-column">
+        <div class="header">
+            <div class="row r1">
+                <div class="col-md-12 abc text-center">
+                    <h1>{{orders.product.name}}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="container-body mt-4">
+            <div class="row r3">
+                <div class="col-md-5 p-0 klo">
+                    <ul class="orders-ul">
+                        <li>
+                            <form style="display: flex;" action="/admin/orderStatus" method="post">
+                                <select name="action" id="cars">
+                                    <option value="{{orders.orderStatus}}" selected hidden>{{orders.orderStatus}}
+                                    </option>
+                                    {{#ifEqual orders.orderStatus "returned"}}
+                                    <option value="Delivered">return completed</option>
+                                    {{else ifEqual orders.orderStatus "Delivered"}}
+                                    {{else ifEqual orders.orderStatus "OutForDelivery"}}
+                                    <option value="Delivered">Delivered</option>
+                                    {{else ifEqual orders.orderStatus "Cancelled"}}
+                                    {{else ifEqual orders.orderStatus "Return Processed"}}
+
+                                    <option value="Confirm return">Confirm return</option>
+                                     {{else ifEqual orders.orderStatus "Confirm return"}}
+                                    {{else}}
+                                    <option value="Delivered">Delivered</option>
+                                    <option value="OutForDelivery">Out For Delivery</option>
+                                    {{/ifEqual}}
+                                </select>
+                                <br>
+                                <input type="text" name="id" value="{{orders._id}}" hidden>
+                                <button class="btn btn-outline-dark" type="submit">Apply</button>
+                            </form>
+
+                        </li>
+                        <li>Product Name: <b> {{orders.product.name}}</b></li>
+                        <li>Quantity: <b> {{orders.quantity}} </b> </li>
+                        <li>Total: <b> {{orders.total}} </b></li>
+                        <li>Amount: <b> {{orders.amountPayable}} </b></li>
+                        <li><b>Address: </b> </li>
+                        <li class="d-flex flex-column ps-3">
+                            <div>
+                                <span>Name: </span><b>{{orders.address.name}}</b>
+                            </div>
+                            <div>
+                                <span>Mobile: </span><b>{{orders.address.mobile}}</b>
+                            </div>
+                            <div>
+                                <span>Address: </span><b>{{orders.address.address}}</b>
+                            </div>
+                            <div>
+                                <span>PinCode: </span><b>{{orders.address.pincode}}</b>
+                            </div>
+                        </li>
+                        <li>Order Status: <b> {{orders.orderStatus}} </b></li>
+                        {{#if status}}
+                        <li>Delivered On: <b> {{orders.dispatch}} </b></li>
+                        {{else}}
+                        <li>Expect Delivery On: <b> {{dispatch}} </b></li>
+                        {{/if}}
+                    </ul>
+                </div>
+                <div class="col-md-7"> <img src="/images/{{orders.product.product.filename}}" style="width:75%;"> </div>
+            </div>
+        </div>
+    </div>

@@ -1,15 +1,26 @@
-
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text text-center ">
+                    <h4>Add Product</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <div class="add-product-main">
     <h3>Add Product</h3>
-    <form class="add-product-container mt-3" id="addProductForm" action="/admin/addProduct" method="post" enctype="multipart/form-data">
+    <form class="add-product-container mt-3" id="addProductForm" action="/admin/addProduct" method="post"
+        enctype="multipart/form-data">
         <div class="a-p-form-row">
             <div class="a-p-form-col">
                 <label for="Name">Product Name</label>
-                <input type="text" name="name"  required>
+                <input type="text" name="name" required>
             </div>
             <div class="a-p-form-col">
                 <label for="Name">Brand Name</label>
-                <input type="text" name="brand"  required>
+                <input type="text" name="brand" required>
             </div>
             <div class="a-p-form-col">
                 <label for="Category">Category</label>
@@ -23,19 +34,19 @@
         <div class="a-p-form-row">
             <div class="a-p-form-col">
                 <label for="Category">Quanitity</label>
-                <input type="number" name="quantity"  required>
+                <input type="number" min="1" name="quantity" >
             </div>
         </div>
         <div class="a-p-form-row">
             <div class="a-p-form-col">
                 <label for="Category">Price</label>
-                <input type="number" name="price"  required>
+                <input type="number" name="price" required>
             </div>
         </div>
         <div class="a-p-form-row">
             <div class="a-p-form-col">
                 <label for="Category">Description</label>
-                <textarea name="description" rows="4" form="addProductForm" ></textarea>
+                <textarea name="description" rows="4" form="addProductForm"></textarea>
             </div>
         </div>
         <div class="a-p-form-row">
@@ -49,9 +60,9 @@
                 <label for="Category">Other Images</label>
                 <input type="file" name="subImages" accept="image/*" multiple>
             </div>
-            
+
         </div>
-            <b class="text-danger"></b>
+        <b class="text-danger"></b>
         <div class="a-p-form-row">
             <button type="submit" class="btn btn-dark text-white">Add product</button>
         </div>
