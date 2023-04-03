@@ -1,3 +1,6 @@
+
+<body class="g-sidenav-show  bg-gray-100">
+
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
   style="max-height:100vh; overflow:hidden" id="sidenav-main">
   <div class="sidenav-header">
@@ -98,11 +101,14 @@
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
                   <div class=" p-0">
-                    <table class="table align-items-center mb-0">
+                    <table class="table align-items-center mb-0 text-center">
                       <thead>
                         <tr>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Product</th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Product</th>
                           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Order ID</th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantity</th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Order Status</th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Action</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -122,27 +128,37 @@
                           <td>
                             <p class="text-xs font-weight-bold mb-0">{{this._id}}</p>
                           </td>
-                          {{!-- <td class="align-middle text-center">
+                          <td>
+                            <p class="text-xs font-weight-bold mb-0">{{this.quantity}}</p>
+                          </td>
+                          <td>
+                            <p class="text-xs font-weight-bold mb-0">{{this.orderStatus}}</p>
+                          </td>
+                          <td>
                             <form style="display: flex;" action="/admin/orderStatus" method="post">
+                                <select name="action" id="cars" onchange="this.form.submit()">
+                                    <option value="{{this.orderStatus}}" selected hidden>{{this.orderStatus}}
+                                    </option>
+                                    {{#ifEqual this.orderStatus "Returned"}}
+                                    {{else ifEqual this.orderStatus "Delivered"}}
+                                    <option value="Delivered">Delivered</option>
+                                    {{else ifEqual this.orderStatus "OutForDelivery"}}
+                                    <option value="Delivered">Delivered</option>
+                                    {{else ifEqual this.orderStatus "Cancelled"}}
+                                    {{else ifEqual this.orderStatus "Return Processed"}}
 
-                              <select name="action" id="cars">
-                                <option value="{{this.orderStatus}}" selected hidden>{{this.orderStatus}}</option>
-                                {{#if this.returned}}
-
-                                {{else this.cancelled}}
-
-                                {{else}}
-                                <option value="Pending">Pending</option>
-                                <option value="Delivered">Delivered</option>
-                                <option value="Cancelled">Cancelled</option>
-                                <option value="OutForDelivery">Out For Delivery</option>
-                                {{/if}}
-                              </select>
-                              <br>
-                              <input type="text" name="id" value="{{this._id}}" hidden>
-                              <button class="btn btn-outline-dark" type="submit"><i class="bi bi-check"></i></button>
+                                    <option value="Returned">Confirm return</option>
+                                     {{else ifEqual this.orderStatus "Confirm return"}}
+                                    {{else}}
+                                    <option value="Delivered">Delivered</option>
+                                    <option value="OutForDelivery">Out For Delivery</option>
+                                    {{/ifEqual}}
+                                </select>
+                                <br>
+                                <input type="text" name="id" value="{{this._id}}" hidden>
                             </form>
-                          </td> --}}
+                            
+                          </td>
                         </tr>
                         {{/each}}
                       </tbody>
@@ -157,3 +173,7 @@
     </div>
     {{/if}}
 </main>
+
+</body>
+
+

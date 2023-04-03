@@ -4180,3 +4180,18 @@ a{
 .order-ul li{
   text-align: left;
 }
+
+
+.wallet-btn{
+	width: 100%;
+	height: 50px;
+	display: flex;
+	justify-content: space-between;
+	background-color: #fff;
+	align-items: center;
+	padding: 0px 10px;
+	border: 1px solid rgba(128, 128, 128, 0.255);
+}
+.wallet-btn input{
+	margin-right: 10px;
+}

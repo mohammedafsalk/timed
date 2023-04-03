@@ -1,3 +1,4 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div id="preloder">
     <div class="loader"></div>
 </div>
@@ -64,7 +65,8 @@
                     <li>Product Name: <b> {{item.product.name}}</b></li>
                     <li>Quantity: <b> {{item.quantity}} </b> </li>
                     <li>Total: <b> {{item.total}} </b></li>
-                    <li>Amount: <b> {{item.amountPayable}} </b></li>
+                    <li>Amount Payable: <b> {{item.amountPayable}} </b></li>
+                    <li>Payment: <b> {{item.paymentType}} </b></li>
                     <li><b>Address: </b> </li>
                     <li class="d-flex flex-column ps-3">
                         <div>
@@ -90,32 +92,74 @@
             </div>
             <div class="col-md-7"> <img src="/images/{{item.product.product.filename}}" style="width:75%;"> </div>
         </div>
-        {{#if notCancelled}}
-        {{#unless returned}}
-        {{#if status}}
+        {{#if delivered}}
         <div class="col-md-4 myt w-100">
-            <button type="button" class="btn btn-dark text-white w-50">
-                <a href="/returnProduct/{{item._id}}">Return</a>
-            </button>
-        </div>
-        {{else unless confirm}}
-        <div class="col-md-4 myt w-100">
-            <button type="button" class="btn btn-dark text-white w-50">
-                <a href="/cancelProduct/{{item._id}}">Cancel</a>
+            <button type="button" class="btn btn-dark text-white w-50" onclick="confirmReturn()">
+                <span>Return</span>
             </button>
         </div>
         {{/if}}
-    </div>
-    {{/unless}}
-    {{else}}
-    <b class="text-danger">Cancelled</b>
-    {{/if}}
-    {{#if returned}}
-    <b class="text-danger">Return In Process</b>
-    {{/if}}
-    {{#if confirm}}
-    <b class="text-danger">Returned</b>
-    {{/if}}
-
+        {{#if pending}}
+         <div class="col-md-4 myt w-100">
+            <button type="button" class="btn btn-dark text-white w-50" onclick="confirmCancellation()">
+                <span>Cancel</span>
+            </button>
+        </div>
+        {{/if}}
+        {{#if returned}}
+         <div class="col-md-4 myt w-100">
+            <b>Item Returned</b>
+        </div>
+        {{/if}}
+        {{#if returnedProcessing}}
+         <div class="col-md-4 myt w-100">
+            <b>Returning Process</b>
+        </div>
+        {{/if}}
+        {{#if cancelled}}
+         <div class="col-md-4 myt w-100">
+            <b>Item Cancelled</b>
+        </div>
+        {{/if}}
 </div>
 </div>
+<script>
+    function confirmCancellation() {
+        Swal.fire({
+            title: 'Are you sure? Cancel',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: "Don't Cancel"
+        }).then((result) => {
+            if (!result.isConfirmed) {
+                window.location.href = "/cancelProduct/{{item._id}}"
+                Swal.fire(
+                    'Cancelled!',
+                    'Your Product has been Cancelled.'
+                )
+            }
+        })
+    }
+    function confirmReturn() {
+        Swal.fire({
+            title: 'Are you sure? Return Product',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: "Yes! Return"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "/returnProduct/{{item._id}}"
+                Swal.fire(
+                    'Return in Process!',
+                    'Your Product will be retuned.'
+                )
+            }
+        })
+    }
+</script>

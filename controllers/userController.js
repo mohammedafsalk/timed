@@ -6,6 +6,7 @@ const categoryModel = require("../models/categoryModel");
 const orderModel = require("../models/orderModel");
 const couponModel = require("../models/couponModel");
 const session = require("express-session");
+const bannerModel = require("../models/bannerModel");
 var msg;
 module.exports = {
   getUserLogin: (req, res) => {
@@ -22,13 +23,14 @@ module.exports = {
 
   getHome: async (req, res) => {
     try {
+      const banners = await bannerModel.find().lean();
       const products = await productModel.find().limit(4).lean();
       if (req.session.user) {
         let user = true;
-        res.render("user/home", { products, user });
+        res.render("user/home", { products, user, banners });
       } else {
         user = false;
-        res.render("user/home", { products, user });
+        res.render("user/home", { products, user, banners });
       }
     } catch (error) {
       console.log(error);
@@ -38,8 +40,21 @@ module.exports = {
   getProduct: async (req, res) => {
     try {
       const id = req.params.id;
-      const product = await productModel.findOne({ _id: id }).lean();
-      res.render("user/productDetails", { product });
+      let user = await userModel.findOne({_id:req.session.user.id})
+      let wishList = user.wishlist
+      console.log(wishList);
+      let exist = false
+      
+      if (wishList.includes(id)) {
+        let exist = true
+        const product = await productModel.findOne({ _id: id }).lean();
+      res.render("user/productDetails", { product,exist });
+      } else {
+        const product = await productModel.findOne({ _id: id }).lean();
+        res.render("user/productDetails", { product });
+      }
+      
+      
     } catch (error) {
       console.log(error);
     }
@@ -148,7 +163,6 @@ module.exports = {
       msg = null;
 
       let coupon = req.session.coupon;
-      console.log(coupon);
 
       let products = await productModel
         .find({ _id: { $in: cartProductIds } })
@@ -165,11 +179,9 @@ module.exports = {
           outOfStock = true;
         }
       });
-      console.log(totalprice);
       if (coupon) {
         totalprice = totalprice - coupon.discount;
       }
-      console.log("disc price", totalprice);
       let empty = true;
       if (products[0]) {
         empty = false;
@@ -200,14 +212,7 @@ module.exports = {
         quantities[cartItem.proId] = cartItem.quantity;
       });
       console.log(quantities);
-
       const updatedQuantity = quantities[id] + 1;
-
-      // if (updatedQuantity > maxQuantity) {
-      //   product.msg="Out Of Stock"
-      //   return res.redirect("/cart");
-      // }
-
       await userModel.findOneAndUpdate(
         {
           _id: req.session.user.id,
@@ -257,13 +262,20 @@ module.exports = {
   addtoCart: async (req, res) => {
     try {
       const id = req.params.id;
-      await userModel.findByIdAndUpdate(req.session.user.id, {
-        $pull: { wishlist: id },
-      });
-      await userModel.findByIdAndUpdate(req.session.user.id, {
-        $addToSet: { cart: { proId: id, quantity: 1 } },
-      });
-      res.redirect("/cart");
+      let cart = req.user?.cart;
+      const isProductInCart = cart.some((item) => item.proId === id);
+
+      if (isProductInCart) {
+        res.json({ success: false });
+      } else {
+        await userModel.findByIdAndUpdate(req.session.user.id, {
+          $pull: { wishlist: id },
+        });
+        await userModel.findByIdAndUpdate(req.session.user.id, {
+          $addToSet: { cart: { proId: id, quantity: 1 } },
+        });
+        res.json({ success: true });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -342,10 +354,15 @@ module.exports = {
   addToWishlist: async (req, res) => {
     try {
       const id = req.params.id;
-      await userModel.findByIdAndUpdate(req.session.user.id, {
-        $addToSet: { wishlist: id },
-      });
-      res.redirect("/wishlist");
+      const user = await userModel.findOne({ _id: req.session.user.id });
+      if (user.wishlist.includes(id)) {
+        res.json({ success: false });
+      } else {
+        await userModel.findByIdAndUpdate(req.session.user.id, {
+          $addToSet: { wishlist: id },
+        });
+       res.redirect('back')
+      }
     } catch (error) {
       console.log(error);
     }
@@ -393,199 +410,190 @@ module.exports = {
         totalprice = totalprice - coupon.discount;
       }
 
-      res.render("user/checkout", { address, products, totalprice, coupon });
+      res.render("user/checkout", {
+        address,
+        products,
+        totalprice,
+        coupon,
+        wallet: req.user.wallet,
+      });
     } catch (error) {
       console.log(error);
     }
   },
 
   checkOut: async (req, res) => {
-    try{
-      req.session.tempOrder=null
-    let { payment, address: addressId, wallet } = req.body;
-    let walletMoney =req.user.wallet;
-    
-    const _id = req.session.user.id;
-    const user = await userModel.findById({ _id }).lean();
-    const cart = user.cart;
-    let cartQuantities = {};
-    req.session.payment=payment
-    const cartList = cart.map((item) => {
-      cartQuantities[item.proId] = item.quantity;
-      return item.proId;
-    });
-    const { address } = await userModel.findOne(  
-      { "address._id": addressId },
-      { _id: 0, address: { $elemMatch: { _id: addressId } } }
-    );
-    req.session.userAddress = {
-      id: address._id,
-    };
-    const product = await productModel.find({ _id: { $in: cartList } }).lean();
-    let totalPrice = 0;
-    let price = 0;
-    product.forEach((item, index) => {
-      price = price + item.price * cart[index].quantity;
-    });
-    //------------------------------------------------------
-    let couponAmount = 0;  
-      if (req.session.coupon) {
-        couponAmount = req.session.coupon.discount;
-      }
-      let amountPayable=price-couponAmount;
-      if(wallet){
-        if(walletMoney >= amountPayable){
-          amountPayable=0;
-          req.session.tempOrder.walletApplied=amountPayable
-          walletMoney-=amountPayable
-        }else{
-          amountPayable-=walletMoney;
-          req.session.tempOrder.walletApplied=walletMoney
-          walletMoney=0
-        }
-      }
-      if(amountPayable=0){
-        payment="cod"
-      }
-      //------------------------------------------------------
-    if (payment == "online") {
-      console.log("online")
-      req.session.tempOrder = {
-        address,
-        product,
-        totalPrice,
-        cartQuantities,
-        payment
-    };
-      
-      let orderId = "order_" + Date.now();
+    try {
+      req.session.tempOrder = null;
+      const { payment, address: addressId, wallet } = req.body;
+      let walletMoney = req.user.wallet;
 
-      // let couponAmount = 0;  
-      // if (req.session.coupon) {
-      //   couponAmount = req.session.coupon.discount;
-      // }
-      // let amountPayable=price-couponAmount;
-      // if(wallet){
-      //   if(walletMoney >= amountPayable){
-      //     amountPayable=0;
-      //     req.session.tempOrder.walletApplied=amountPayable
-      //     walletMoney-=amountPayable
-      //   }else{
-      //     amountPayable-=walletMoney;
-      //     req.session.tempOrder.walletApplied=walletMoney
-      //     walletMoney=0
-      //   }
-      // }
-      const options = {
-        method: "POST",
-        url: "https://sandbox.cashfree.com/pg/orders",
-        headers: {
-          accept: "application/json",
-          "x-api-version": "2022-09-01",
-          "x-client-id": process.env.CASHFREE_API,
-          "x-client-secret": process.env.CASHFREE_SECRET,
-          "content-type": "application/json",
-        },
-        data: {
-          order_id: orderId,
-          order_amount: amountPayable,
-          order_currency: "INR",
-          customer_details: {
-            customer_id: _id,
-            customer_email: user.email,
-            customer_phone: address[0].mobile,
-          },
-          order_meta: {
-            return_url: "http://localhost:4000/return?order_id={order_id}",
-          },
-        },
+      const _id = req.session.user.id;
+      const user = await userModel.findById({ _id }).lean();
+      const cart = user.cart;
+      let cartQuantities = {};
+      req.session.payment = payment;
+      const cartList = cart.map((item) => {
+        cartQuantities[item.proId] = item.quantity;
+        return item.proId;
+      });
+      const { address } = await userModel.findOne(
+        { "address._id": addressId },
+        { _id: 0, address: { $elemMatch: { _id: addressId } } }
+      );
+      req.session.userAddress = {
+        id: address._id,
       };
-      await axios
-        .request(options)
-        .then(function (response) {
-          return res.render("user/paymentScr", {
-            orderId,
-            sessionId: response.data.payment_session_id,
-          });
-        })
-        .catch(function (error) {
-        });
-    } else {
-      walletMoney=req.user.wallet;
-      amountPayable=0
-     
-        console.log("cod");
-      let orders = [];
-      let i = 0;
-      for (let item of product) {
-        await productModel.updateOne(
-          { _id: item._id },
-          {
-            $inc: {
-              quantity: -1 * cartQuantities[item._id],
-            },
-          }
-        );
+      const product = await productModel
+        .find({ _id: { $in: cartList } })
+        .lean();
+      let totalPrice = 0;
+      let price = 0;
+      product.forEach((item, index) => {
+        price = price + item.price * cart[index].quantity;
+      });
+      if (payment == "online") {
+        console.log("online");
+        req.session.tempOrder = {
+          address,
+          product,
+          totalPrice,
+          cartQuantities,
+          payment,
+        };
+
+        let orderId = "order_" + Date.now();
 
         let couponAmount = 0;
         if (req.session.coupon) {
           couponAmount = req.session.coupon.discount;
         }
-        let distributedCouponAmount = couponAmount / product.length;
-        
-        totalPrice = cartQuantities[item._id] * item.price;
-        amountPayable=totalPrice - distributedCouponAmount
-      console.log(walletMoney, wallet)
-        if(wallet){
-          console.log(wallet, "inside wallet")
-          if(walletMoney >= amountPayable){
-            walletMoney-=amountPayable
-            amountPayable=0;
-            console.log(amountPayable, walletMoney, "inside walet money greater")
-          }else{
-            amountPayable-=walletMoney;
-            walletMoney=0
-            console.log(amountPayable, walletMoney, "inside walet money lesser")
+        let amountPayable = price - couponAmount;
+        if (wallet) {
+          if (walletMoney >= amountPayable) {
+            amountPayable = 1;
+            req.session.tempOrder.walletApplied = amountPayable;
+            walletMoney -= amountPayable;
+          } else {
+            amountPayable -= walletMoney;
+            req.session.tempOrder.walletApplied = walletMoney;
+            walletMoney = 0;
           }
         }
-        orders.push({
-          address: address[0],
-          product: item,
-          userId: req.session.user.id,
-          quantity: cartQuantities[item._id],
-          total: totalPrice,
-          amountPayable,
-          dispatch: new Date(),
-          paymentType:payment
-        });
-        i++;
-      }
-      console.log(walletMoney)
-      const order = await orderModel.create(orders); //work as insert many
-      await userModel.findByIdAndUpdate(
-        { _id },
-        {
-          $set: { cart: [], wallet:walletMoney },
-        }
-        
-      );
-      console.log("Success")
-      req.session.coupon = null;
-      req.session.tempOrder=null;
-      req.session.payment=null;
 
-      res.redirect("/orderplaced");
-      
+        const options = {
+          method: "POST",
+          url: "https://sandbox.cashfree.com/pg/orders",
+          headers: {
+            accept: "application/json",
+            "x-api-version": "2022-09-01",
+            "x-client-id": process.env.CASHFREE_API,
+            "x-client-secret": process.env.CASHFREE_SECRET,
+            "content-type": "application/json",
+          },
+          data: {
+            order_id: orderId,
+            order_amount: amountPayable,
+            order_currency: "INR",
+            customer_details: {
+              customer_id: _id,
+              customer_email: user.email,
+              customer_phone: address[0].mobile,
+            },
+            order_meta: {
+              return_url: "http://localhost:4000/return?order_id={order_id}",
+            },
+          },
+        };
+        await axios
+          .request(options)
+          .then(function (response) {
+            return res.render("user/paymentScr", {
+              orderId,
+              sessionId: response.data.payment_session_id,
+            });
+          })
+          .catch(function (error) {});
+      } else {
+        console.log("cod");
+
+        let orders = [];
+        let i = 0;
+        for (let item of product) {
+          await productModel.updateOne(
+            { _id: item._id },
+            {
+              $inc: {
+                quantity: -1 * cartQuantities[item._id],
+              },
+            }
+          );
+
+          let couponAmount = 0;
+          if (req.session.coupon) {
+            couponAmount = req.session.coupon.discount;
+          }
+          let distributedCouponAmount = couponAmount / product.length;
+
+          totalPrice = cartQuantities[item._id] * item.price;
+          let amountPayable = totalPrice - distributedCouponAmount;
+          console.log(walletMoney, wallet);
+          if (wallet) {
+            console.log(wallet, "inside wallet");
+            if (walletMoney >= amountPayable) {
+              walletMoney -= amountPayable;
+              amountPayable = 0;
+              console.log(
+                amountPayable,
+                walletMoney,
+                "inside walet money greater"
+              );
+            } else {
+              amountPayable -= walletMoney;
+              walletMoney = 0;
+              console.log(
+                amountPayable,
+                walletMoney,
+                "inside walet money lesser"
+              );
+            }
+          }
+          orders.push({
+            address: address[0],
+            product: item,
+            userId: req.session.user.id,
+            quantity: cartQuantities[item._id],
+            total: totalPrice,
+            amountPayable,
+            dispatch: new Date(),
+            paymentType: payment,
+          });
+          i++;
+        }
+        console.log(walletMoney);
+        await orderModel.create(orders);
+        await userModel.findByIdAndUpdate(
+          { _id },
+          {
+            $set: { cart: [], wallet: walletMoney },
+          }
+        );
+        console.log("Success");
+        req.session.coupon = null;
+        req.session.tempOrder = null;
+        req.session.payment = null;
+
+        res.redirect("/orderplaced");
+      }
+    } catch (err) {
+      res.json(err);
     }
-  }catch(err){
-    res.json(err)
-  }
   },
 
   returnURL: async (req, res) => {
     try {
       const order_id = req.query.order_id;
-      let walletApplied=0
+      let walletApplied = 0;
       const options = {
         method: "GET",
         url: "https://sandbox.cashfree.com/pg/orders/" + order_id,
@@ -625,39 +633,38 @@ module.exports = {
             quantity: cartQuantities[item._id],
             total: totalPrice,
             dispatch: new Date(),
-            paymentType:req.session.payment
+            paymentType: req.session.payment,
           });
           i++;
         }
 
         const order = await orderModel.create(orders); //work as insert many
-        if(req.session.tempOrder.walletApplied){
-          walletApplied=req.session.tempOrder.walletApplied
+        if (req.session.tempOrder.walletApplied) {
+          walletApplied = req.session.tempOrder.walletApplied;
         }
         await userModel.findByIdAndUpdate(
           { _id: req.session.user.id },
           {
-            $set: { cart: [], wallet:req.user.wallet-walletApplied }
+            $set: { cart: [], wallet: req.user.wallet - walletApplied },
           }
         );
 
         req.session.coupon = null;
         req.session.tempOrder = null;
-        req.session.payment=null;
+        req.session.payment = null;
         res.render("user/orderPlaced", { failed: false });
-
       } else {
         req.session.tempOrder = null;
-        req.session.coupon=null;
-        req.session.payment=null;
+        req.session.coupon = null;
+        req.session.payment = null;
 
         res.render("user/orderPlaced", { failed: true });
       }
     } catch (err) {
-      console.log("error ",err);
+      console.log("error ", err);
       req.session.tempOrder = null;
-      req.session.coupon=null;
-      req.session.payment=null;
+      req.session.coupon = null;
+      req.session.payment = null;
       res.render("user/orderPlaced", { failed: true });
     }
   },
@@ -713,24 +720,35 @@ module.exports = {
     const id = req.params.id;
     const item = await orderModel.findById(id).lean();
 
-    let status = false;
-    let notCancelled = true;
+    let pending = false;
+    let delivered = false;
+    let cancelled = false;
+    let returnedProcessing = false;
+    let returned = false;
     if (item.orderStatus == "Delivered") {
-      status = true;
+      delivered = true;
     }
     if (item.orderStatus == "Cancelled") {
-      notCancelled = false;
+      cancelled = true;
     }
-    let returned = false;
     if (item.orderStatus == "Return Processed") {
+      returnedProcessing = true;
+    }
+    if (item.orderStatus == "Returned") {
       returned = true;
     }
-    let confirm =false;
-    if(item.orderStatus == "Confirm return"){
-      confirm=true
+    if (item.orderStatus == "Pending") {
+      pending = true;
     }
 
-    res.render("user/viewOrder", { item,dispatch:item.dispatch.toLocaleDateString(), status, notCancelled, returned,confirm });
+    res.render("user/viewOrder", {
+      item,
+      dispatch: item.dispatch.toLocaleDateString(),
+      delivered,
+      cancelled,
+      returnedProcessing,
+      returned,
+    });
   },
 
   getaddAddress: async (req, res) => {
@@ -843,13 +861,13 @@ module.exports = {
       },
     });
 
-  if(order.paymentType == "online"){
-    await userModel.findByIdAndUpdate(req.session.user.id, {
-      $inc: {
-        wallet: order.total - order.amountPayable,
-      },
-    });
-  }
+    if (order.paymentType == "online") {
+      await userModel.findByIdAndUpdate(req.session.user.id, {
+        $inc: {
+          wallet: order.total - order.amountPayable,
+        },
+      });
+    }
     await productModel.findByIdAndUpdate(proid, {
       $inc: {
         quantity: order.quantity,
@@ -858,27 +876,13 @@ module.exports = {
     res.redirect("back");
   },
 
-
   returnProduct: async (req, res) => {
     const id = req.params.id;
     const order = await orderModel.findById(id);
     await orderModel.findByIdAndUpdate(id, {
       $set: {
         orderStatus: "Return Processed",
-      }
-    });
-
-    if(order.orderStatus == "Returned")
-    await userModel.findByIdAndUpdate(req.session.user.id, {
-      $inc: {
-        wallet: order.total,
-      }
-    });
-
-    await productModel.findByIdAndUpdate(order.product._id, {
-      $inc: {
-        quantity: order.quantity,
-      }
+      },
     });
 
     res.redirect("back");

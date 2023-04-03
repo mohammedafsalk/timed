@@ -1,6 +1,28 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<style>
+    .add-cart {
+        cursor: pointer;
+
+    }
+</style>
+
 <div id="preloder">
     <div class="loader"></div>
 </div>
+
+<!-- Offcanvas Menu Begin -->
+<div class="offcanvas-menu-overlay"></div>
+<div class="offcanvas-menu-wrapper">
+    <div class="offcanvas__nav__option">
+        <a href="/wishlist"><img src="img/icon/heart-line.png" alt=""></a>
+        <a href="/cart"><img src="img/icon/shopping-cart-line.png" alt=""></a>
+        <a href="/logout"><img src="img/icon/logout-circle-r-line.png" alt=""></a>
+    </div>
+    <div id="mobile-menu-wrap"></div>
+</div>
+<!-- Offcanvas Menu End -->
 
 <!-- Header Section Begin -->
 <header class="header">
@@ -83,8 +105,9 @@
                                             {{#each category}}
                                             <label for="{{this.category}}" style="width:100%" {{#if this.selected}}
                                                 class="active" {{/if}}>{{this.category}}
-                                                <input type="radio" id="{{this.category}}" name="category"
-                                                    onchange="this.form.submit()" value="{{this.category}}">
+                                                <input type="radio" id="{{this.category}}" name="category" {{#if this.selected}}
+                                                checked {{/if}}
+                                                    onchange="this.form.submit()" value="{{this.category}}"> 
                                             </label>
                                             {{/each}}
 
@@ -128,15 +151,20 @@
                     {{#if this.list}}
                     <div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="/images/{{this.product.filename}}">
-                                <ul class="product__hover">
-                                    <li><a href="/addTowishlist/{{this._id}}"><img src="img/icon/heart.png" alt=""></a>
-                                    </li>
-                                </ul>
-                            </div>
+                            <a href="/product/{{this._id}}">
+                                <div class="product__item__pic set-bg" data-setbg="/images/{{this.product.filename}}">
+                                    <ul class="product__hover">
+                                        <li>
+                                            <img src="img/icon/heart.png" alt=""
+                                                onclick="event.preventDefault(); Wishlisted('{{this._id}}')">
+                                        </li>
+                                    </ul>
+                                </div>
+                            </a>
+
                             <div class="product__item__text">
                                 <h6>{{this.name}}</h6>
-                                <a href="/product/{{this._id}}" class="add-cart">View Product</a>
+                                <a class="add-cart" onclick="addToCart('{{this._id}}')">Add To Cart</a>
                                 <h5>Rs.{{this.price}}</h5>
                             </div>
                         </div>
@@ -161,3 +189,25 @@
     </div>
 </section>
 <!-- Shop Section End -->
+
+<script>
+    function Wishlisted(id) {
+        axios.get('/addTowishlist/' + id).then((result) => {
+            if (result.data.success) {
+                Swal.fire("Item Added to wishlist");
+            } else {
+                Swal.fire("Item Already Exist");
+            }
+        });
+    }
+
+    function addToCart(id) {
+        axios.get('/addtoCart/' + id).then((result) => {
+            if (result.data.success) {
+                Swal.fire("Item Added To Cart");
+            } else {
+                Swal.fire("Item Already Exist In Cart");
+            }
+        });
+    }
+</script>

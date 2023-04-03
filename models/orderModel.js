@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const orderSchema = new mongoose.Schema({
     orderStatus:{
         type:String,
-        default:"pending"
+        default:"Pending"
     },
     paid:{
         type:Boolean,

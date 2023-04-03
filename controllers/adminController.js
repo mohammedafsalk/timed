@@ -7,6 +7,7 @@ const bannerModel = require("../models/bannerModel");
 const { findByIdAndUpdate } = require("../models/userModel");
 const orderModel = require("../models/orderModel");
 const couponModel = require("../models/couponModel");
+const moment = require('moment')
 const router = express.Router();
 
 module.exports = {
@@ -15,27 +16,132 @@ module.exports = {
     const totalProducts = await productModel.find().countDocuments();
     const totalorders = await orderModel.find().countDocuments();
 
-    const deliveredOrder = await orderModel.find({
-      orderStatus: "Delivered",
-    }).lean()
-    
+    const deliveredOrder = await orderModel
+      .find({
+        orderStatus: "Delivered",
+      })
+      .lean();
+
     let totalRevenue = 0;
     let Orders = deliveredOrder.filter((item) => {
       totalRevenue = totalRevenue + item.total;
     });
 
-  
-
-  
-    res.render("admin/home", { totalUsers,totalProducts,totalorders,totalRevenue});
+    const monthlyDataArray= await orderModel.aggregate([{$group:{_id:{$month:"$createdAt"}, sum:{$sum:"$total"}}}])
+    console.log(monthlyDataArray)
+    let 
+    monthlyDataObject={}
+    monthlyDataArray.map(item=>{
+      monthlyDataObject[item._id]=item.sum
+    })
+    let monthlyData=[]
+    for(let i=1; i<=12; i++){
+        monthlyData[i-1]= monthlyDataObject[i] ?? 0
+      }
+      console.log(monthlyData)
+    res.render("admin/home", {
+      totalUsers,
+      totalProducts,
+      totalorders,
+      totalRevenue,
+      monthlyData
+    });
   },
+  getSalesReport: async (req, res) => {
+    
+    let startDate = new Date(new Date().setDate(new Date().getDate() - 8))
+    let endDate = new Date()
+    
+    if(req.query.startDate){
+        startDate = new Date(req.query.startDate)
+        startDate.setHours(0, 0, 0, 0);
+    }
+    if(req.query.endDate){
+        endDate = new Date(req.query.endDate)
+        endDate.setHours(24, 0, 0, 0);
+    }
+    if(req.query.filter=='thisYear'){
+      let currentDate= new Date()
+      startDate= new Date(currentDate.getFullYear(), 0, 1);
+      startDate.setHours(0, 0, 0, 0);
+      endDate= new Date(new Date().setDate(new Date().getDate() +1 ))
+      endDate.setHours(0, 0, 0, 0);
+    }
+    if(req.query.filter=='lastYear'){
+      let currentDate= new Date()
+      startDate= new Date(currentDate.getFullYear()-1, 0, 1);
+      startDate.setHours(0, 0, 0, 0);
+      endDate= new Date(currentDate.getFullYear()-1, 11, 31);
+      endDate.setHours(0, 0, 0, 0);
+    }
+    if(req.query.filter=='thisMonth'){
+      let currentDate= new Date()
+      startDate= new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      startDate.setHours(0, 0, 0, 0);
+      endDate= new Date(currentDate.getFullYear(), currentDate.getMonth()+1, 1);
+      endDate.setHours(0, 0, 0, 0);
+    }
+    if(req.query.filter=='lastMonth'){
+      let currentDate= new Date()
+      startDate= new Date(currentDate.getFullYear(), currentDate.getMonth()-1, 1);
+      startDate.setHours(0, 0, 0, 0);
+      endDate= new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      endDate.setHours(0, 0, 0, 0);
+    }
+
+  const orders = await orderModel
+    .find({createdAt: { $gt: startDate, $lt: endDate }})
+    .sort({ createdAt: -1 })
+    .lean();
+  let totalOrders = orders.length;
+  let totalRevenue = 0;
+  let totalPending = 0;
+  console.log(orders)
+  let deliveredOrders = orders.filter((item) => {
+    console.log(item.orderStatus)
+
+    if (item.orderStatus == "Pending" || item.orderStatus == 'outForDelivery') {
+      totalPending++;
+    }
+
+    totalRevenue = totalRevenue + item.product.price;
+    return item.orderStatus=='Delivered';
+  });
+  let totalDispatch = deliveredOrders.length;
+
+  let orderTable=[]
+  orders.map(item=>{
+    orderTable.push([item.product.name, item.total, item.orderStatus, item.quantity, item.createdAt.toLocaleDateString() ])
+  })
+  let byCategory= await orderModel.aggregate([{$match:{createdAt: { $gt: startDate, $lt: endDate }}},{$group:{_id:"$product.category", count:{$sum:1}, profit:{$sum:"$product.price"}}}])
+  let byBrand= await orderModel.aggregate([{$match:{createdAt: { $gt: startDate, $lt: endDate}}},{$group:{_id:"$product.brand", count:{$sum:1}, profit:{$sum:"$product.price"}}}])
+
+  let filter=req.query.filter ?? "";
+  if(!req.query.filter && !req.query.startDate){
+    filter="lastWeek"
+  }
+  res.render("admin/salesReport", {
+    orders,
+    totalDispatch,
+    totalOrders,
+    totalPending,
+    totalRevenue,
+    startDate:moment(new Date(startDate).setDate(new Date(startDate).getDate() + 1)).utc().format('YYYY-MM-DD'),
+    endDate:moment(endDate).utc().format('YYYY-MM-DD'),
+    orderTable,
+    categories:byCategory,
+    byBrand,
+    filter
+  });
+  },
+
 
   getadminlogin: (req, res) => {
     res.render("admin/login");
   },
 
   getOrders: async (req, res) => {
-    const order = await orderModel.find().lean();
+    const order = await orderModel.find().sort({_id:-1}).lean();
     let empty = true;
     if (order[0]) {
       empty = false;
@@ -55,40 +161,40 @@ module.exports = {
   getViewOrder: async (req, res) => {
     const _id = req.params.id;
     let orders = await orderModel.findById(_id).lean();
-    res.render("admin/viewOrder", { orders,dispatch:orders.dispatch.toLocaleDateString()});
+    res.render("admin/viewOrder", {
+      orders,
+      dispatch: orders.dispatch.toLocaleDateString(),
+    });
   },
 
   orderstatus: async (req, res) => {
     const order = await orderModel.findById(req.body.id);
-    if (req.body.action == "Cancelled" || req.body.action == "Confirm return") {
-      await userModel.findByIdAndUpdate(req.session.user.id, {
-        $inc: {
-          wallet: order.total - order.amountPayable,
-        },
-      });
-    }
 
-    if(req.body.action == "confirm return"){
+    if (req.body.action == "Returned") {
       await orderModel
-      .updateOne(
-        { _id: req.body.id },
-        { $set: { orderStatus:"Returned" } }
-      )
-      .then((result) => {
-        res.redirect("back");
-      });
-    }else{
+        .updateOne({ _id: req.body.id }, { $set: { orderStatus: "Returned" } });
+          await userModel.findByIdAndUpdate(order.userId, {
+            $inc: {
+              wallet: order.total- order.amountPayable,
+            }
+          });
+          
+          await productModel.findByIdAndUpdate(order.product._id, {
+            $inc: {
+              quantity: order.quantity,
+            }
+          });
+          res.redirect("back")
+    } else {
       await orderModel
-      .updateOne(
-        { _id: req.body.id },
-        { $set: { orderStatus: req.body.action } }
-      )
-      .then((result) => {
-        res.redirect("back");
-      });
+        .updateOne(
+          { _id: req.body.id },
+          { $set: { orderStatus: req.body.action } }
+        )
+        .then((result) => {
+          res.redirect("back");
+        });
     }
-
-    
   },
 
   getBanner: async (req, res) => {
@@ -117,13 +223,13 @@ module.exports = {
   editBanner: async (req, res) => {
     try {
       const id = req.body._id;
-      console.log("new:", id);
 
       if (!req.file) {
         await bannerModel.findByIdAndUpdate(id, {
           $set: {
             productName: req.body.name,
-            url: req.body.url,
+            caption: req.body.caption,
+            heading:req.body.mainhead,
             desc: req.body.description,
           },
         });
@@ -132,7 +238,8 @@ module.exports = {
         await bannerModel.findByIdAndUpdate(id, {
           $set: {
             productName: req.body.name,
-            url: req.body.url,
+            caption: req.body.caption,
+            heading:req.body.mainhead,
             desc: req.body.description,
             img: req.file.filename,
           },
@@ -148,7 +255,8 @@ module.exports = {
     bannerModel
       .create({
         productName: req.body.name,
-        url: req.body.url,
+        caption: req.body.caption,
+        heading:req.body.mainhead,
         desc: req.body.description,
         img: req.file.filename,
       })
@@ -163,6 +271,9 @@ module.exports = {
 
   getCoupons: async (req, res) => {
     const coupons = await couponModel.find().lean();
+    coupons.forEach((item, index)=>{
+      coupons[index].expDate=new Date(item.expDate).toLocaleDateString()
+    })
     res.render("admin/coupons", { coupons });
   },
 
@@ -184,7 +295,7 @@ module.exports = {
       .create({
         name: req.body.name,
         code: req.body.code,
-        expDate: formattedExpDate,
+        expDate,
         discount: req.body.discount,
         minAmount: req.body.minamnt,
       })
@@ -195,6 +306,30 @@ module.exports = {
         console.log(Error);
         res.render("admin/addCoupon");
       });
+  },
+
+  getEditCoupon: async (req, res) => {
+    const id = req.params.id;
+    const coupon = await couponModel.findOne({ _id: id }).lean();
+    res.render("admin/editCoupon", { coupon });
+  },
+
+  editCoupon: async (req, res) => {
+    try {
+      const _id = req.body._id;
+      await couponModel.findOneAndUpdate(_id, {
+        $set: {
+          name: req.body.category,
+          code: req.body.code,
+          expDate: new Date(req.body.exp),
+          discount: req.body.discount,
+          minAmount: req.body.minamnt,
+        },
+      });
+      res.redirect("/admin/coupons");
+    } catch (error) {
+      console.log(error);
+    }
   },
 
   deleteCoupon: async (req, res) => {
@@ -396,7 +531,7 @@ module.exports = {
       }
     } catch (error) {
       console.log(error);
-    }
+    }                                                         
   },
 
   deleteCategory: async (req, res) => {

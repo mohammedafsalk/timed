@@ -141,7 +141,7 @@
                                 <li>Amount Payable<span id="totalPrice">{{totalprice}}</span></li>
                             </ul>
                             <div class="checkout__input__checkbox">
-                                <label for="online">
+                                <label for="online" id="online-input">
                                     <input type="radio" id="online" name="payment" value="online" required>
                                     Online Payment
                                 </label>
@@ -154,9 +154,15 @@
                             </div>
                             <hr>
                             <div class="checkout__input__checkbox">
-                                <label for="cod">
-                                    <input type="checkbox" id="cod" name="wallet" value="true" required>
-                                    Apply Wallet
+                                <label for="wallet-input" class="wallet-btn">
+                                    <span>
+                                    <input type="checkbox" id="wallet-input" name="wallet" value="true">
+                                    <b>Apply Wallet</b> 
+                                    </span>
+                                    <b id="wallet">
+                                        {{wallet}}
+                                    </b>
+
                                 </label>
                             </div>
                             <button type="submit" class="site-btn"><a href="/orderplaced" class="text-white">Place
@@ -200,4 +206,30 @@
             totalPrice.innerHTML = Number(totalPrice.innerHTML) - data.coupon.discount
         }
     }
+    let walletAmount= {{wallet}}
+    let totalPrice = Number(document.getElementById('totalPrice').innerHTML)
+    let totalPriceElement = document.getElementById('totalPrice')
+
+    document.getElementById('wallet-input').addEventListener('change', function(e){
+    let wallet = document.getElementById('wallet')
+        if(e.target.checked){
+            if(walletAmount >= totalPrice){
+                wallet.innerHTML= walletAmount-totalPrice;
+                totalPriceElement.innerHTML=0
+                document.getElementById('online-input').style.visibility="hidden"
+                document.getElementById('online').value="cod"
+            }else{
+                totalPriceElement.innerHTML=totalPrice-walletAmount;
+                wallet.innerHTML= 0;
+
+            }
+        }
+        else{
+            wallet.innerHTML= walletAmount;
+            totalPriceElement.innerHTML=totalPrice;
+                document.getElementById('online-input').style.visibility="visible"
+                document.getElementById('online').value="online"
+
+        }
+    })
 </script>
