@@ -166,20 +166,30 @@
 <script>
     function Wishlisted(id) {
         axios.get('/addTowishlist/' + id).then((result) => {
+            if(!result.data.login){
+                window.location.href="/login"
+            }else{
             if (result.data.success) {
                 Swal.fire("Item Added to wishlist");
             } else {
                 Swal.fire("Item Already Exist");
+            }
             }
         });
     }
 
     function addToCart(id) {
         axios.get('/addtoCart/' + id).then((result) => {
+            console.log(result.data)
+            if(!result.data.login){
+                window.location.href="/login"
+            }else{
             if (result.data.success) {
                 Swal.fire("Item Added To Cart");
-            } else {
+            }
+            else if(result.data.success==false){
                 Swal.fire("Item Already Exist In Cart");
+            }
             }
         });
     }

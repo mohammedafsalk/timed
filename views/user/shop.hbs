@@ -105,9 +105,9 @@
                                             {{#each category}}
                                             <label for="{{this.category}}" style="width:100%" {{#if this.selected}}
                                                 class="active" {{/if}}>{{this.category}}
-                                                <input type="radio" id="{{this.category}}" name="category" {{#if this.selected}}
-                                                checked {{/if}}
-                                                    onchange="this.form.submit()" value="{{this.category}}"> 
+                                                <input type="radio" id="{{this.category}}" name="category" {{#if
+                                                    this.selected}} checked {{/if}} onchange="this.form.submit()"
+                                                    value="{{this.category}}">
                                             </label>
                                             {{/each}}
 
@@ -193,20 +193,29 @@
 <script>
     function Wishlisted(id) {
         axios.get('/addTowishlist/' + id).then((result) => {
-            if (result.data.success) {
-                Swal.fire("Item Added to wishlist");
+            if (!result.data.login) {
+                window.location.href = "/login"
             } else {
-                Swal.fire("Item Already Exist");
+
+                if (result.data.success) {
+                    Swal.fire("Item Added to wishlist");
+                } else {
+                    Swal.fire("Item Already Exist");
+                }
             }
         });
     }
 
     function addToCart(id) {
         axios.get('/addtoCart/' + id).then((result) => {
-            if (result.data.success) {
-                Swal.fire("Item Added To Cart");
+            if (!result.data.login) {
+                window.location.href = "/login"
             } else {
-                Swal.fire("Item Already Exist In Cart");
+                if (result.data.success) {
+                    Swal.fire("Item Added To Cart");
+                } else {
+                    Swal.fire("Item Already Exist In Cart");
+                }
             }
         });
     }
