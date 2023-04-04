@@ -751,6 +751,7 @@ module.exports = {
     res.render("user/viewOrder", {
       item,
       dispatch: item.dispatch.toLocaleDateString(),
+      pending,
       delivered,
       cancelled,
       returnedProcessing,

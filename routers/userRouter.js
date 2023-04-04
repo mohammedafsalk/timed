@@ -23,6 +23,7 @@ router.get('/product/:id',getProduct)
 
 router.use(checkUser)
 
+
 router.get('/cart', getCart)
 router.get('/delete-cartItem/:id',removefromCart)
 router.get('/wishlist',getWishlist)
