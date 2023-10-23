@@ -7,7 +7,9 @@ const orderModel = require("../models/orderModel");
 const couponModel = require("../models/couponModel");
 const session = require("express-session");
 const bannerModel = require("../models/bannerModel");
+
 var msg;
+
 module.exports = {
   getUserLogin: (req, res) => {
     try {
@@ -40,20 +42,17 @@ module.exports = {
   getProduct: async (req, res) => {
     try {
       const id = req.params.id;
-      let wishList = req.user?.wishlist ?? []
-      console.log(wishList);
-      let exist = false
-      
+      let wishList = req.user?.wishlist ?? [];
+      let exist = false;
+
       if (wishList.includes(id)) {
-        let exist = true
+        let exist = true;
         const product = await productModel.findOne({ _id: id }).lean();
-      res.render("user/productDetails", { product,exist });
+        res.render("user/productDetails", { product, exist });
       } else {
         const product = await productModel.findOne({ _id: id }).lean();
         res.render("user/productDetails", { product });
       }
-      
-      
     } catch (error) {
       console.log(error);
     }
@@ -203,14 +202,12 @@ module.exports = {
       const id = req.params.id;
       const product = await productModel.findOne({ _id: id }).lean();
       const maxQuantity = product.quantity;
-      console.log("max q-", maxQuantity);
 
       const user = await userModel.findOne({ _id: req.session.user.id });
       const quantities = {};
       user.cart.forEach((cartItem) => {
         quantities[cartItem.proId] = cartItem.quantity;
       });
-      console.log(quantities);
       const updatedQuantity = quantities[id] + 1;
       await userModel.findOneAndUpdate(
         {
@@ -261,25 +258,23 @@ module.exports = {
   addtoCart: async (req, res) => {
     try {
       const id = req.params.id;
-      if(!req.user){
-        res.json({login:false})
+      if (!req.user) {
+        res.json({ login: false });
       }
 
       let cart = req.user?.cart ?? [];
-        const isProductInCart = cart.some((item) => item.proId === id);
-        if (isProductInCart) {
-          return res.json({ success: false, login:true });
-        } else {
-          await userModel.findByIdAndUpdate(req.session.user.id, {
-            $pull: { wishlist: id },
-          });
-          await userModel.findByIdAndUpdate(req.session.user.id, {
-            $addToSet: { cart: { proId: id, quantity: 1 } },
-          });
-        }
-        return res.json({ success: true, login:true });
-      
-
+      const isProductInCart = cart.some((item) => item.proId === id);
+      if (isProductInCart) {
+        return res.json({ success: false, login: true });
+      } else {
+        await userModel.findByIdAndUpdate(req.session.user.id, {
+          $pull: { wishlist: id },
+        });
+        await userModel.findByIdAndUpdate(req.session.user.id, {
+          $addToSet: { cart: { proId: id, quantity: 1 } },
+        });
+      }
+      return res.json({ success: true, login: true });
     } catch (error) {
       console.log(error);
     }
@@ -301,11 +296,9 @@ module.exports = {
 
   applyCoupon: async (req, res) => {
     let UserCoupon = req.body.coupon;
-    console.log(req.body.coupon);
     let coupon = await couponModel.findOne({ code: UserCoupon }).lean();
 
     const { cart } = req.user;
-    console.log(cart);
     let totalPrice = 0;
     let cartQuantity = {};
     let cartItemIds = cart.map((item) => {
@@ -315,15 +308,14 @@ module.exports = {
     let products = await productModel
       .find({ _id: { $in: cartItemIds } })
       .lean();
-    console.log(products);
     for (let item of products) {
       totalPrice += item.price * cartQuantity[item._id];
     }
-    console.log(totalPrice);
+  
 
     if (coupon) {
       if (coupon.expDate > new Date()) {
-        console.log(coupon.minAmount, totalPrice);
+        
         if (coupon.minAmount <= totalPrice) {
           req.session.coupon = coupon;
           return res.json({ error: false, coupon });
@@ -358,17 +350,17 @@ module.exports = {
   addToWishlist: async (req, res) => {
     try {
       const id = req.params.id;
-      if(!req.user){
-        return res.json({login:false})
+      if (!req.user) {
+        return res.json({ login: false });
       }
       const user = await userModel.findOne({ _id: req.session.user.id });
       if (user.wishlist.includes(id)) {
-        res.json({ success: false, login:true });
+        res.json({ success: false, login: true });
       } else {
         await userModel.findByIdAndUpdate(req.session.user.id, {
-          $addToSet: { wishlist: id, login:true},
+          $addToSet: { wishlist: id },
         });
-       res.redirect('back')
+        res.json({ success: true, login: true });
       }
     } catch (error) {
       console.log(error);
@@ -460,7 +452,6 @@ module.exports = {
         price = price + item.price * cart[index].quantity;
       });
       if (payment == "online") {
-        console.log("online");
         req.session.tempOrder = {
           address,
           product,
@@ -508,7 +499,8 @@ module.exports = {
               customer_phone: address[0].mobile,
             },
             order_meta: {
-              return_url: "https://timed.afsal.online/return?order_id={order_id}",
+              return_url:
+                "https://timed.afsal.online/return?order_id={order_id}",
             },
           },
         };
@@ -544,25 +536,15 @@ module.exports = {
 
           totalPrice = cartQuantities[item._id] * item.price;
           let amountPayable = totalPrice - distributedCouponAmount;
-          console.log(walletMoney, wallet);
+        
           if (wallet) {
             console.log(wallet, "inside wallet");
             if (walletMoney >= amountPayable) {
               walletMoney -= amountPayable;
               amountPayable = 0;
-              console.log(
-                amountPayable,
-                walletMoney,
-                "inside walet money greater"
-              );
             } else {
               amountPayable -= walletMoney;
               walletMoney = 0;
-              console.log(
-                amountPayable,
-                walletMoney,
-                "inside walet money lesser"
-              );
             }
           }
           orders.push({
@@ -577,7 +559,6 @@ module.exports = {
           });
           i++;
         }
-        console.log(walletMoney);
         await orderModel.create(orders);
         await userModel.findByIdAndUpdate(
           { _id },
@@ -585,7 +566,6 @@ module.exports = {
             $set: { cart: [], wallet: walletMoney },
           }
         );
-        console.log("Success");
         req.session.coupon = null;
         req.session.tempOrder = null;
         req.session.payment = null;
@@ -668,7 +648,6 @@ module.exports = {
         res.render("user/orderPlaced", { failed: true });
       }
     } catch (err) {
-      console.log("error ", err);
       req.session.tempOrder = null;
       req.session.coupon = null;
       req.session.payment = null;
@@ -918,7 +897,6 @@ module.exports = {
           otp: randomOtp,
         };
         await sentOTP(email, randomOtp);
-        console.log(randomOtp);
         return res.redirect("/signup/otp");
       }
     } catch (err) {
@@ -956,7 +934,6 @@ module.exports = {
           tempOtp: otp,
           email,
         };
-        console.log(otp);
         await sentOTP(email, otp);
         res.render("user/forgetOtp");
       } else {
@@ -970,8 +947,6 @@ module.exports = {
   forgetOtp: async (req, res) => {
     try {
       const { otp } = req.body;
-      console.log(req.session.temp.tempOtp);
-
       if (otp == req.session.temp.tempOtp) {
         res.render("user/newpassword");
       } else {

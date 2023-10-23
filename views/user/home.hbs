@@ -187,7 +187,7 @@
             if (result.data.success) {
                 Swal.fire("Item Added To Cart");
             }
-            else if(result.data.success==false){
+            else if(!result.data.success){
                 Swal.fire("Item Already Exist In Cart");
             }
             }

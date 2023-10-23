@@ -94,7 +94,7 @@
                 <div class="row">
                     <div class="col-lg-8 col-md-6">
                         <h6 class="checkout__title">Billing Details</h6>
-                        <a href="/add-address"><button class="btn btn-dark text-white">Add Address</button></a>
+                        <button  type="button" onclick="addAddress()" class="btn btn-dark text-white">Add Address</button>
                         {{#each address}}
                         <div class="row">
                             <div class="card mb-3">
@@ -191,6 +191,13 @@
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 
 <script>
+
+function addAddress() {
+    console.log("hello");
+    window.location.href = "/add-address"; 
+}
+
+
     async function applyCoupon() {
         let coupon = document.getElementById('coupon').value
         let { data } = await axios.post("/applyCoupon", { coupon: coupon })
