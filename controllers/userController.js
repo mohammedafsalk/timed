@@ -40,8 +40,7 @@ module.exports = {
   getProduct: async (req, res) => {
     try {
       const id = req.params.id;
-      let user = await userModel.findOne({_id:req.session.user.id})
-      let wishList = user.wishlist
+      let wishList = req.user?.wishlist ?? []
       console.log(wishList);
       let exist = false
       
@@ -262,20 +261,25 @@ module.exports = {
   addtoCart: async (req, res) => {
     try {
       const id = req.params.id;
-      let cart = req.user?.cart;
-      const isProductInCart = cart.some((item) => item.proId === id);
-
-      if (isProductInCart) {
-        res.json({ success: false });
-      } else {
-        await userModel.findByIdAndUpdate(req.session.user.id, {
-          $pull: { wishlist: id },
-        });
-        await userModel.findByIdAndUpdate(req.session.user.id, {
-          $addToSet: { cart: { proId: id, quantity: 1 } },
-        });
-        res.json({ success: true });
+      if(!req.user){
+        res.json({login:false})
       }
+
+      let cart = req.user?.cart ?? [];
+        const isProductInCart = cart.some((item) => item.proId === id);
+        if (isProductInCart) {
+          return res.json({ success: false, login:true });
+        } else {
+          await userModel.findByIdAndUpdate(req.session.user.id, {
+            $pull: { wishlist: id },
+          });
+          await userModel.findByIdAndUpdate(req.session.user.id, {
+            $addToSet: { cart: { proId: id, quantity: 1 } },
+          });
+        }
+        return res.json({ success: true, login:true });
+      
+
     } catch (error) {
       console.log(error);
     }
@@ -354,12 +358,15 @@ module.exports = {
   addToWishlist: async (req, res) => {
     try {
       const id = req.params.id;
+      if(!req.user){
+        return res.json({login:false})
+      }
       const user = await userModel.findOne({ _id: req.session.user.id });
       if (user.wishlist.includes(id)) {
-        res.json({ success: false });
+        res.json({ success: false, login:true });
       } else {
         await userModel.findByIdAndUpdate(req.session.user.id, {
-          $addToSet: { wishlist: id },
+          $addToSet: { wishlist: id, login:true},
         });
        res.redirect('back')
       }
@@ -501,7 +508,7 @@ module.exports = {
               customer_phone: address[0].mobile,
             },
             order_meta: {
-              return_url: "http://localhost:4000/return?order_id={order_id}",
+              return_url: "https://timed.afsal.online/return?order_id={order_id}",
             },
           },
         };
@@ -744,6 +751,7 @@ module.exports = {
     res.render("user/viewOrder", {
       item,
       dispatch: item.dispatch.toLocaleDateString(),
+      pending,
       delivered,
       cancelled,
       returnedProcessing,
