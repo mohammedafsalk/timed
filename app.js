@@ -16,7 +16,6 @@ const app = express()
 app.engine('hbs',engine({extname:".hbs"}))
 app.set('view engine','hbs')
 
-// Register the ifEqual helper
 Handlebars.registerHelper('ifEqual', function(a, b, options) {
     if (a === b) {
       return options.fn(this);
