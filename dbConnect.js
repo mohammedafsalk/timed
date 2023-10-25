@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const dbConnect = ()=>{
     mongoose.set('strictQuery',true)
-    mongoose.connect('mongodb://127.0.0.1:27017/E_commerce')
+    mongoose.connect(process.env.MONGOPASS)
     .then(()=>{
         console.log(' DB connected');  
         
