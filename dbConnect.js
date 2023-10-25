@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const dbConnect = ()=>{
-    mongoose.set('strictQuery',true)
+    mongoose.set('strictQuery',false)
     mongoose.connect(process.env.MONGOPASS)
     .then(()=>{
         console.log(' DB connected');  
