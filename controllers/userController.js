@@ -259,13 +259,13 @@ module.exports = {
     try {
       const id = req.params.id;
       if (!req.user) {
-        res.json({ login: false });
+        res.json({ success: false, login: false });
       }
 
       let cart = req.user?.cart ?? [];
       const isProductInCart = cart.some((item) => item.proId === id);
       if (isProductInCart) {
-        return res.json({ success: false, login: true });
+        return res.json({ login: true });
       } else {
         await userModel.findByIdAndUpdate(req.session.user.id, {
           $pull: { wishlist: id },
@@ -311,11 +311,9 @@ module.exports = {
     for (let item of products) {
       totalPrice += item.price * cartQuantity[item._id];
     }
-  
 
     if (coupon) {
       if (coupon.expDate > new Date()) {
-        
         if (coupon.minAmount <= totalPrice) {
           req.session.coupon = coupon;
           return res.json({ error: false, coupon });
@@ -536,7 +534,7 @@ module.exports = {
 
           totalPrice = cartQuantities[item._id] * item.price;
           let amountPayable = totalPrice - distributedCouponAmount;
-        
+
           if (wallet) {
             console.log(wallet, "inside wallet");
             if (walletMoney >= amountPayable) {

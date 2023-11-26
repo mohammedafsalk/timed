@@ -25,8 +25,7 @@ Handlebars.registerHelper("ifEqual", function (a, b, options) {
 app.use(
   session({
     store: MongoStore.create({
-      mongoUrl:
-        "mongodb+srv://techafs456:GOGGOQKRiDh9Cpl9@cluster1.q8lap20.mongodb.net/?retryWrites=true&w=majority",
+      mongoUrl: "mongodb://127.0.0.1:27017/E_commerce",
     }),
     secret: "12656",
     resave: false,

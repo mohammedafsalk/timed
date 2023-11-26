@@ -178,19 +178,24 @@
         });
     }
 
-    function addToCart(id) {
-        axios.get('/addtoCart/' + id).then((result) => {
-            console.log(result.data)
-            if(!result.data.login){
-                window.location.href="/login"
-            }else{
+   function addToCart(id) {
+    axios.get('/addtoCart/' + id).then((result) => {
+        if (!result.data.login) {
+            Swal.fire({
+                text: "Please login",
+                icon: "warning",
+                confirmButtonText: "OK",
+            }).then(() => {
+                window.location.href = "/login";
+            });
+        } else {
             if (result.data.success) {
                 Swal.fire("Item Added To Cart");
-            }
-            else if(!result.data.success){
+            } else if (!result.data.success) {
                 Swal.fire("Item Already Exist In Cart");
             }
-            }
-        });
-    }
+        }
+    });
+}
+
 </script>

@@ -155,14 +155,25 @@
 
 
     function addToCart(id) {
-        axios.get('/addtoCart/' + id).then((result) => {
+    axios.get('/addtoCart/' + id).then((result) => {
+        if (!result.data.login) {
+            Swal.fire({
+                text: "Please login",
+                icon: "warning",
+                confirmButtonText: "OK",
+            }).then(() => {
+                window.location.href = "/login";
+            });
+        } else {
             if (result.data.success) {
                 Swal.fire("Item Added To Cart");
-            } else {
+            } else if (!result.data.success) {
                 Swal.fire("Item Already Exist In Cart");
             }
-        });
-    }
+        }
+    });
+}
+
 
 
 
